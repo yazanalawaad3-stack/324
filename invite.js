@@ -36,28 +36,29 @@
     }
   }
 
-  function getUserId() {
-    const raw =
-      window.LUX_USER_ID ||
-      window.USER_ID ||
-      localStorage.getItem('lux_user_id') ||
-      localStorage.getItem('user_id') ||
-      '750899';
-    return String(raw).trim() || '750899';
+  function getUser() {
+    try {
+      return JSON.parse(localStorage.getItem('app_user') || 'null');
+    } catch {
+      return null;
+    }
   }
 
   function buildInvite() {
-    const code = getUserId();
+    const user = getUser();
+    const code = String(user?.referral_code || '').trim();
+
     const origin = window.location.origin || '';
     const base = origin || 'https://example.com';
     const url = new URL('register.html', base.endsWith('/') ? base : `${base}/`);
-    url.searchParams.set('code', code);
+    if (code) url.searchParams.set('code', code);
+
     const link = url.toString();
 
     const linkEl = qs('#inviteLinkText');
     const codeEl = qs('#inviteCodeText');
     if (linkEl) linkEl.textContent = link;
-    if (codeEl) codeEl.textContent = code;
+    if (codeEl) codeEl.textContent = code || '—';
 
     return { link, code };
   }
@@ -85,7 +86,7 @@
 
       const payload = {
         title: 'Invitation',
-        text: `Invite code: ${invite.code}`,
+        text: invite.code ? `Invite code: ${invite.code}` : 'Invitation',
         url: invite.link,
       };
 
@@ -95,9 +96,7 @@
           toast('Shared');
           return;
         }
-      } catch {
-        // user canceled share or share failed
-      }
+      } catch {}
 
       const ok = await safeCopy(`${invite.link}\n${invite.code}`);
       toast(ok ? 'Copied' : 'Share not supported');
