@@ -717,6 +717,9 @@ const { pct, achieved } = computeProgress(levelKey);
       }
     }
 
+    // expose for external scripts (Supabase live data)
+    window.selectLevel = selectLevel;
+
     function openModal(title, text){
       els.modalTitle.textContent = title;
       els.modalText.textContent = text;
