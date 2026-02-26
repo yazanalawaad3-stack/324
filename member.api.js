@@ -18,16 +18,42 @@
 
   async function load() {
     try {
-      const res = await sb.from("v_user_activity").select("level,status").eq("user_id", uid).single();
+      const res = await sb
+        .from("v_user_activity")
+        .select("level,status,balance")
+        .eq("user_id", uid)
+        .single();
       if (res.error) throw res.error;
 
       const level = String((res.data && res.data.level) || "v0");
       const status = String((res.data && res.data.status) || "active");
+      const balance = Number((res.data && res.data.balance) || 0);
+
+      // Active direct referrals (effective users)
+      let effUsers = 0;
+      try {
+        const r2 = await sb.rpc("count_active_direct_referrals", { p_user: uid });
+        if (!r2.error && r2.data != null) effUsers = Number(r2.data) || 0;
+      } catch (_) {}
 
       localStorage.setItem("lux_level", level);
       localStorage.setItem("lux_status", status);
 
       setActiveTab(level.toUpperCase());
+
+      // Update member page profile stats and re-render
+      if (window.data && window.data.profile) {
+        window.data.profile.balance = Math.floor(balance * 100000000) / 100000000;
+        window.data.profile.users = effUsers;
+      }
+
+      // Re-render selected level (defined in member.html)
+      if (typeof window.selectLevel === "function") {
+        const current = (level || "v0").toUpperCase();
+        // Member page levels start from V1 in UI; keep at least V1
+        const uiLevel = current === "V0" ? "V1" : current;
+        window.selectLevel(uiLevel);
+      }
 
       if (status === "frozen") {
         sess.toast("Account frozen");
