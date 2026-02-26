@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transfer</title>
+  <meta name="color-scheme" content="dark light" />
+  <style>
+    :root{
+      --bg: #070A0E;
+      --panel: rgba(255,255,255,.06);
+      --panel-2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.62);
+      --muted-2: rgba(255,255,255,.42);
+      --brand: #2FE6A3;
+      --brand-2: #26C58B;
+      --danger: #FF5C7A;
+      --shadow: 0 20px 50px rgba(0,0,0,.55);
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --gap: 14px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 70% -10%, rgba(47,230,163,.14), transparent 60%),
+        radial-gradient(700px 500px at 10% 110%, rgba(80,140,255,.12), transparent 55%),
+        linear-gradient(180deg, #05070B, var(--bg));
+      display:flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 18px 14px;
+    
+      overflow-y:auto;
+      align-items: flex-start;
+    }
+
+    .app{
+      width: min(720px, 100%);
+      display:flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .phone{
+      width: 100%;
+      min-width: 0;
+      border-radius: 28px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.08);
+      position: relative;
+      display:flex;
+      flex-direction:column;
+      overflow: hidden;
+      
+      max-height: calc(100dvh - 36px);
+    }
+
+    .phone::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(500px 280px at 20% 0%, rgba(47,230,163,.12), transparent 60%),
+        radial-gradient(420px 240px at 85% 15%, rgba(255,255,255,.06), transparent 55%),
+        radial-gradient(520px 320px at 60% 120%, rgba(80,140,255,.10), transparent 60%);
+      pointer-events:none;
+      filter: blur(0px);
+    }
+
+    .content{ position:relative; flex:1; min-height:0; overflow:auto; padding-bottom: 18px; -webkit-overflow-scrolling: touch; }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 2px 2px 14px;
+    }
+    .icon-btn{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .icon-btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+    .icon-btn:active{ transform: translateY(0px) scale(.98); }
+
+    .title{
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .title h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .4px;
+      font-weight: 750;
+      text-transform: lowercase;
+    }
+    .title span{
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted-2);
+    }
+
+    .card{
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 14px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+    }
+
+    .stack{ display:flex; flex-direction: column; gap: var(--gap); }
+
+    .label{
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .2px;
+      margin: 2px 2px 8px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .hint{ color: var(--muted-2); font-size: 12px; }
+
+    .field{
+      border-radius: 18px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 12px 12px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      transition: border-color .12s ease, background .12s ease;
+      min-height: 48px;
+    }
+    .field:focus-within{ border-color: rgba(47,230,163,.35); background: rgba(47,230,163,.04); }
+
+    select, input{
+      width: 100%;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: .2px;
+      padding: 2px 0;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input::placeholder{ color: rgba(255,255,255,.28); font-weight: 600; }
+
+    .pill{
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .3px;
+      white-space: nowrap;
+    }
+
+    .btn{
+      width: 100%;
+      border: 0;
+      cursor: pointer;
+      border-radius: 22px;
+      padding: 16px 14px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .3px;
+      background: linear-gradient(180deg, rgba(47,230,163,.92), rgba(38,197,139,.92));
+      color: #062017;
+      box-shadow: 0 16px 34px rgba(47,230,163,.20);
+      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: saturate(1.05); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn[disabled]{ opacity: .48; cursor: not-allowed; filter: grayscale(.2); }
+
+    .ghost{
+      border-radius: 18px;
+      padding: 14px;
+      width: 100%;
+      border: 1px dashed rgba(255,255,255,.16);
+      background: rgba(255,255,255,.02);
+      color: rgba(255,255,255,.86);
+      font-weight: 800;
+      cursor: pointer;
+      transition: border-color .12s ease, background .12s ease, transform .12s ease;
+    }
+    .ghost:hover{ border-color: rgba(47,230,163,.35); background: rgba(47,230,163,.04); transform: translateY(-1px); }
+    .ghost:active{ transform: translateY(0px) scale(.99); }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .subrow{
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .subrow b{ color: rgba(255,255,255,.80); font-weight: 800; }
+
+    .stats{
+      padding: 12px 14px;
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .stats .line{
+      display:flex;
+      justify-content: space-between;
+      padding: 10px 2px;
+      gap: 10px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      font-size: 14px;
+      color: rgba(255,255,255,.80);
+      flex-wrap: wrap;
+    }
+    .stats .line:first-child{ border-top: 0; }
+    .stats .k{ color: rgba(255,255,255,.70); font-weight: 650; }
+    .stats .v{ font-weight: 850; letter-spacing: .2px; }
+
+    .error{
+      display:none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,92,122,.35);
+      background: rgba(255,92,122,.10);
+      color: rgba(255,255,255,.90);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .meta{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted-2);
+    }
+
+    .chev{
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 7px solid rgba(255,255,255,.55);
+      opacity: .8;
+      flex: 0 0 auto;
+    }
+
+    dialog::backdrop{ background: rgba(0,0,0,.55); }
+
+    @media (min-width: 980px){
+      body{ padding: 26px; }
+      .phone{ padding: 22px; }
+      .title h1{ font-size: 19px; }
+      .app{ width: min(760px, 100%); }
+    }
+
+    @media (max-width: 420px){
+      .icon-btn{ width: 42px; height: 42px; border-radius: 14px; }
+      select, input{ font-size: 15px; }
+      .btn{ padding: 15px 14px; }
+      .phone{ border-radius: 26px; padding: 16px; }
+    }
+  
+    /* Withdrawal terms */
+    .terms{ margin-top: 16px; }
+    .terms h2{
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .terms .term{ padding-top: 10px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,.06); }
+    .terms .term:first-of-type{ padding-top: 0; margin-top: 0; border-top: 0; }
+    .terms h3{
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: 850;
+      color: rgba(255,255,255,.90);
+    }
+    .terms p{
+      margin: 0 0 6px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .terms p:last-child{ margin-bottom: 0; }
+
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <section class="phone" aria-label="Transfer screen">
+      <div class="content">
+        <header>
+          <button class="icon-btn" type="button" id="backBtn" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="title">
+            <h1>transfer</h1>
+            <span>fast, simple, secure</span>
+          </div>
+
+          <button class="icon-btn" type="button" id="menuBtn" aria-label="Withdrawal history">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 8v5l3 2" stroke="rgba(255,255,255,.85)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="rgba(255,255,255,.85)" stroke-width="2.2"/>
+            </svg>
+          </button>
+        </header>
+
+        <div class="stack">
+          <div>
+            <div class="label">
+              <span>transfer currency</span>
+              <span class="hint" id="balanceHint">Available 0.00 USDT</span>
+            </div>
+            <div class="field" role="group" aria-label="Currency">
+              <select id="currency" disabled>
+                <option value="USDT" selected>USDT</option>
+              </select>
+              <span class="chev" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div>
+            <div class="label">
+              <span>transfer network</span>
+              <span class="hint">Select correct chain</span>
+            </div>
+            <div class="field" role="group" aria-label="Network">
+              <select id="network" disabled>
+                <option value="BEP-20" selected>BEP-20</option>
+              </select>
+              <span class="chev" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div>
+            <div class="label">
+              <span>transfer address</span>
+              <span class="hint" id="addressCount">0 saved</span>
+            </div>
+            <div class="field" role="group" aria-label="Address">
+              <input id="addressInput" placeholder="Wallet address" autocomplete="off" />
+            </div>
+            <div style="height:12px;"></div>
+            <button class="ghost" type="button" id="addAddressBtn">Add address</button>
+          </div>
+
+          <div>
+            <div class="label">
+              <span>Quantity</span>
+              <span class="hint" id="minHint">Minimum 20 USDT</span>
+            </div>
+            <div class="field" role="group" aria-label="Quantity">
+              <input id="amount" inputmode="decimal" placeholder="Enter transferal Quantity" />
+              <span class="pill" id="unitPill">USDT</span>
+              <button class="pill" type="button" id="maxBtn" aria-label="Max">MAX</button>
+            </div>
+            <div class="subrow">
+              <span id="availableLine">Available <b>0.00</b> USDT</span>
+              <span id="minimumLine">Minimum <b>20</b> USDT</span>
+            </div>
+            <div class="error" id="errorBox" role="alert"></div>
+          </div>
+
+          <div class="stats" aria-label="Summary">
+            <div class="line">
+              <div class="k">Minimum transferal Quantity</div>
+              <div class="v" id="minValue">20 USDT</div>
+            </div>
+            <div class="line">
+              <div class="k">transferal Fee</div>
+              <div class="v" id="feeValue">0.00 USDT</div>
+            </div>
+            <div class="line">
+              <div class="k">Received Quantity</div>
+              <div class="v" id="receivedValue">0.00 USDT</div>
+            </div>
+          </div>
+
+          <button class="btn" id="transferBtn" type="button" disabled>transfer</button>
+
+          <div class="meta">
+            <span id="statusText">Ready</span>
+            <span>v1</span>
+          </div>
+
+
+                    <div class="stats terms" dir="ltr" aria-label="Withdrawal Terms">
+            <h2>Withdrawal Terms</h2>
+
+            <div class="term">
+              <h3>1. Processing Time</h3>
+              <p>We understand you want to receive your withdrawal as quickly as possible. Our system works continuously to process requests promptly and securely.</p>
+              <p>Each withdrawal is subject to automated verification and may take between <strong>3 and 120 hours</strong> depending on system load and security checks.</p>
+              <p>If your account passes all internal checks without issues, your withdrawal may be completed in less time.</p>
+            </div>
+
+            <div class="term">
+              <h3>2. Wallet Address Policy</h3>
+              <p>For security reasons, the same wallet address must not be used across multiple accounts.</p>
+            </div>
+
+            <div class="term">
+              <h3>3. Cancellation During Processing</h3>
+              <p>You may cancel your withdrawal request at any time during the processing period.</p>
+              <p>If cancelled before completion, the full amount will be instantly returned to your account balance.</p>
+            </div>
+
+            <div class="term">
+              <h3>4. Minimum Withdrawal Amount</h3>
+              <p>The minimum withdrawal amount is <strong>20 USDT</strong>.</p>
+            </div>
+          </div></div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="addressDialog">
+    <form method="dialog" class="card" style="width:min(520px, 94vw); padding:18px; border-radius:22px; background: rgba(15,18,26,.98); border:1px solid rgba(255,255,255,.14);">
+      <div class="row" style="margin-bottom:12px;">
+        <div style="font-size:16px; font-weight:850;">Add address</div>
+        <button class="icon-btn" type="submit" aria-label="Close" style="width:40px;height:40px;border-radius:14px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="rgba(255,255,255,.85)" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="stack">
+        <div>
+          <div class="label"><span>Address</span><span class="hint">Paste destination</span></div>
+          <div class="field"><input id="addrValue" placeholder="Wallet address" autocomplete="off" /></div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="saveAddrBtn" value="default" style="flex:1;">Save</button>
+        </div>
+        <div class="hint" id="addrNote" style="text-align:center;">Stored in localStorage</div>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    window.state = {
+      balances: { USDT: 0.00 },
+      minimum: { USDT: 20 },
+      fee: {
+        // 5 USDT per 100 USDT (5%)
+        "BEP-20": (amt) => Math.max(0, amt * 0.05)
+      }
+    };
+
+    const storageKey = "transfer_saved_addresses_v1";
+
+    function loadAddresses(){
+      try{
+        const raw = localStorage.getItem(storageKey);
+        const list = raw ? JSON.parse(raw) : [];
+        return Array.isArray(list) ? list.filter(x => typeof x === "string") : [];
+      }catch(e){
+        return [];
+      }
+    }
+
+    function saveAddresses(list){
+      localStorage.setItem(storageKey, JSON.stringify(list));
+    }
+
+    function format2(n){
+      const x = Number.isFinite(n) ? n : 0;
+      return x.toFixed(2);
+    }
+
+    function isValidBep20Address(addr){
+      const a = String(addr || "").trim();
+      return /^0x[a-fA-F0-9]{40}$/.test(a);
+    }
+
+    function currentCurrency(){ return $("currency").value; }
+    function currentNetwork(){ return $("network").value; }
+
+    function updateHeader(){
+      const c = currentCurrency();
+      const bal = state.balances[c] ?? 0;
+      $("balanceHint").textContent = `Available ${format2(bal)} ${c}`;
+      $("unitPill").textContent = c;
+
+      const min = state.minimum[c] ?? 0;
+      $("minHint").textContent = `Minimum ${min} ${c}`;
+      $("availableLine").innerHTML = `Available <b>${format2(bal)}</b> ${c}`;
+      $("minimumLine").innerHTML = `Minimum <b>${min}</b> ${c}`;
+      $("minValue").textContent = `${min} ${c}`;
+
+      const list = loadAddresses();
+      $("addressCount").textContent = `${list.length} saved`;
+    }
+
+    function parseAmount(){
+      const raw = $("amount").value.trim().replace(/,/g, ".");
+      const num = Number(raw);
+      return Number.isFinite(num) ? num : NaN;
+    }
+
+    function validate(){
+      const c = currentCurrency();
+      const n = currentNetwork();
+      const addr = $("addressInput").value.trim();
+      const bal = state.balances[c] ?? 0;
+      const min = state.minimum[c] ?? 0;
+
+      const amt = parseAmount();
+
+      let err = "";
+      if(!isValidBep20Address(addr)) err = "Invalid wallet address.";
+      else if(!Number.isFinite(amt) || amt <= 0) err = "Enter a valid amount.";
+      else if(amt < min) err = `Amount must be at least ${min} ${c}.`;
+      else if(amt > bal) err = "Insufficient balance.";
+
+      const feeFn = state.fee[n] ?? ((x)=>0);
+      const fee = Number.isFinite(amt) ? feeFn(amt) : 0;
+      const recv = Math.max(0, (Number.isFinite(amt) ? amt : 0) - fee);
+
+      $("feeValue").textContent = `${format2(fee)} ${c}`;
+      $("receivedValue").textContent = `${format2(recv)} ${c}`;
+
+      const ok = err === "";
+      $("transferBtn").disabled = !ok;
+
+      const box = $("errorBox");
+      if(ok){
+        box.style.display = "none";
+        box.textContent = "";
+        $("statusText").textContent = "Ready";
+      }else{
+        box.style.display = "block";
+        box.textContent = err;
+        $("statusText").textContent = "Check details";
+      }
+      return ok;
+    }
+
+    function setMax(){
+      const c = currentCurrency();
+      const bal = state.balances[c] ?? 0;
+      $("amount").value = format2(bal);
+      validate();
+    }
+
+    function toast(text){
+      $("statusText").textContent = text;
+    }
+
+    function simulateTransfer(){
+      if(!validate()) return;
+      const c = currentCurrency();
+      const n = currentNetwork();
+      const amt = parseAmount();
+      const feeFn = state.fee[n] ?? ((x)=>0);
+      const fee = feeFn(amt);
+      const recv = Math.max(0, amt - fee);
+
+      $("transferBtn").disabled = true;
+      toast("Processing...");
+
+      setTimeout(()=>{
+        state.balances[c] = Math.max(0, (state.balances[c] ?? 0) - amt);
+        updateHeader();
+        $("amount").value = "";
+        $("feeValue").textContent = `0.00 ${c}`;
+        $("receivedValue").textContent = `0.00 ${c}`;
+        toast(`Sent ${format2(amt)} ${c} • Received ${format2(recv)} ${c}`);
+        validate();
+      }, 800);
+    }
+
+    function openAddressDialog(){
+      $("addrValue").value = $("addressInput").value.trim();
+      $("addrNote").textContent = "Stored in localStorage";
+      $("addressDialog").showModal();
+      setTimeout(()=> $("addrValue").focus(), 50);
+    }
+
+    function saveAddressFromDialog(){
+      const value = $("addrValue").value.trim();
+      if(!isValidBep20Address(value)){
+        $("addrNote").textContent = "Invalid BEP-20 address.";
+        return;
+      }
+
+      const list = loadAddresses();
+      if(!list.includes(value)){
+        list.unshift(value);
+        saveAddresses(list.slice(0, 25));
+      }
+
+      $("addressInput").value = value;
+      $("addressDialog").close();
+      updateHeader();
+      validate();
+      toast("Address saved");
+    }
+
+    function init(){
+      updateHeader();
+      validate();
+
+      $("amount").addEventListener("input", ()=>{ validate(); });
+      $("addressInput").addEventListener("input", ()=>{ validate(); });
+
+      $("maxBtn").addEventListener("click", setMax);
+      $("transferBtn").addEventListener("click", simulateTransfer);
+      $("addAddressBtn").addEventListener("click", openAddressDialog);
+      $("saveAddrBtn").addEventListener("click", (e)=>{ e.preventDefault(); saveAddressFromDialog(); });
+
+      $("backBtn").addEventListener("click", ()=>{ window.location.href = "myassets.html"; });
+      $("menuBtn").addEventListener("click", ()=>{ window.location.href = "transfer1"; });
+
+      document.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" && document.activeElement === $("amount")){
+          e.preventDefault();
+          simulateTransfer();
+        }
+      });
+    }
+
+    init();
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./supabase-client.js"></script>
+<script src="./session.js"></script>
+<script src="./transfer.api.js"></script>
+</body>
+</html>

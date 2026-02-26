@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
+  <title>Register</title>
   <!-- International telephone input styles -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" />
   <style>
     :root {
+      /* Variables drawn from the existing site for cohesion */
       --bg: #06070b;
       --bg2: #090b12;
       --card: rgba(255,255,255,.06);
@@ -83,6 +84,7 @@
         inset 0 1px 0 rgba(255,255,255,.10);
       position: relative;
     }
+    /* glowing overlays matching site cards */
     .card::before {
       content: "";
       position: absolute;
@@ -118,7 +120,7 @@
       display: block;
     }
 
-    /* Wrapper for password input with toggle */
+    /* Wrapper for password inputs with toggle */
     .password-wrapper {
       position: relative;
     }
@@ -144,6 +146,7 @@
       width: 20px;
       height: 20px;
     }
+    input[type="text"],
     input[type="tel"],
     input[type="password"] {
       padding: 12px 14px;
@@ -165,7 +168,7 @@
       border: 1px solid rgba(255,255,255,.12);
       border-radius: 14px;
       color: var(--text);
-      padding-left: 54px;
+      padding-left: 54px; /* space for flag */
       height: 48px;
     }
     .iti--allow-dropdown .iti__flag-container {
@@ -184,12 +187,37 @@
     input::placeholder {
       color: var(--muted2);
     }
+    .captcha {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .captcha input {
+      flex: 1;
+    }
+    .captcha-image {
+      width: 96px;
+      /* Match height of other inputs for uniform alignment */
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--text);
+      user-select: none;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,.10);
+    }
     button[type="submit"] {
       margin-top: 8px;
       padding: 14px;
       border: none;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--glow), var(--glow2));
+      background: linear-gradient(90deg, var(--good), var(--glow));
       color: var(--bg);
       font-weight: 700;
       font-size: 1rem;
@@ -201,8 +229,29 @@
       transform: scale(.98);
       filter: brightness(1.05);
     }
+
+    /* Disabled submit button appearance */
+    button[type="submit"]:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* Agreement checkbox and text */
+    .agree-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--muted2);
+    }
+    .agree-container a {
+      color: var(--glow);
+      text-decoration: none;
+    }
+
+    /* Helper text for switching pages */
     .helper {
-      margin-top: 14px;
+      margin-top: 12px;
       font-size: 0.85rem;
       color: var(--muted2);
       text-align: center;
@@ -212,16 +261,29 @@
       text-decoration: none;
       font-weight: 600;
     }
+
+    /* Footer links at bottom of page */
+    .footer-links {
+      font-size: 0.75rem;
+      color: var(--muted2);
+      text-align: center;
+      padding: 16px;
+    }
+    .footer-links a {
+      color: var(--glow);
+      text-decoration: none;
+      margin: 0 4px;
+    }
   </style>
 </head>
 <body>
   <header>
     <a href="#" class="back-btn">&#x2190;</a>
-    Login
+    Register
   </header>
   <main>
     <div class="card">
-      <h1>Welcome Back</h1>
+      <h1>Create Account</h1>
       <form action="#" method="post">
         <div>
           <label for="phone">Phone Number</label>
@@ -232,22 +294,48 @@
           <div class="password-wrapper">
             <input type="password" id="password" name="password" placeholder="Enter password" required />
             <span class="toggle-password" data-target="password">
+              <!-- Eye icon (show/hide) -->
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12c-3.33 0-6.21-2.05-7.54-5 1.33-2.95 4.21-5 7.54-5 3.33 0 6.21 2.05 7.54 5-1.33 2.95-4.21 5-7.54 5z"/><circle cx="12" cy="12" r="3"/></svg>
             </span>
           </div>
         </div>
-        <button type="submit">Login</button>
+        <div>
+          <label for="confirm">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="confirm" name="confirm" placeholder="Re-enter password" required />
+            <span class="toggle-password" data-target="confirm">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12c-3.33 0-6.21-2.05-7.54-5 1.33-2.95 4.21-5 7.54-5 3.33 0 6.21 2.05 7.54 5-1.33 2.95-4.21 5-7.54 5z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="invite">Invite Code</label>
+          <input type="text" id="invite" name="invite" placeholder="Enter invite code" />
+        </div>
+        <div>
+          <label for="captcha">Captcha</label>
+          <div class="captcha">
+            <input type="text" id="captcha" name="captcha" placeholder="Enter code" required />
+            <div id="captchaImage" class="captcha-image" title="Click to refresh"></div>
+          </div>
+        </div>
+        <div class="agree-container">
+          <input type="checkbox" id="agree" />
+          <span>I agree to <a href="#">Privacy Policy</a> &amp; <a href="#">Terms of Use</a></span>
+        </div>
+        <button type="submit" id="submitBtn" disabled>Register</button>
       </form>
       <div class="helper">
-        Don’t have an account?
-        <a href="register.html">Register</a>
+        Already have an account?
+        <a href="login.html">Login</a>
       </div>
     </div>
   </main>
-  <!-- International telephone input script -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a>
+  </div>
   <script>
-    // Toggle password visibility for login page
+    // Toggle password visibility for any password input with eye icon
     function setupPasswordToggles() {
       document.querySelectorAll('.toggle-password').forEach(function(toggle) {
         toggle.addEventListener('click', function() {
@@ -256,23 +344,26 @@
           if (!input) return;
           if (input.type === 'password') {
             input.type = 'text';
+            // Change icon to eye-off
             this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12c-3.33 0-6.21-2.05-7.54-5 1.33-2.95 4.21-5 7.54-5 3.33 0 6.21 2.05 7.54 5-1.33 2.95-4.21 5-7.54 5z"/><path d="M3 3l18 18" stroke="currentColor" stroke-width="2"/></svg>';
           } else {
             input.type = 'password';
+            // Change icon back to eye
             this.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12c-3.33 0-6.21-2.05-7.54-5 1.33-2.95 4.21-5 7.54-5 3.33 0 6.21 2.05 7.54 5-1.33 2.95-4.21 5-7.54 5z"/><circle cx="12" cy="12" r="3"/></svg>';
           }
         });
       });
     }
-    // Initialize international phone input on login page
-    function initPhoneInputLogin() {
+    // Initialize international phone input after the library script loads
+    function initPhoneInput() {
       if (window.intlTelInput) {
         const phoneField = document.querySelector('#phone');
-        window._itiLogin = window.intlTelInput(phoneField, {
+        window._itiRegister = window.intlTelInput(phoneField, {
           initialCountry: 'auto',
           separateDialCode: true,
           utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js',
           geoIpLookup: function(callback) {
+            // Try to determine the user's country via a free IP API
             fetch('https://ipapi.co/json/')
               .then(function(resp) { return resp.json(); })
               .then(function(data) {
@@ -287,18 +378,37 @@
           }
         });
       } else {
-        setTimeout(initPhoneInputLogin, 100);
+        // Retry initialization if script hasn't loaded yet
+        setTimeout(initPhoneInput, 100);
       }
     }
+    // Generate a random 4‑digit captcha and refresh on click
+    function generateCaptcha() {
+      const digits = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('captchaImage').textContent = String(digits);
+    }
+    document.getElementById('captchaImage').addEventListener('click', generateCaptcha);
+    window.addEventListener('load', generateCaptcha);
+    // Enable register button only when agreement checkbox is ticked
+    const agreeBox = document.getElementById('agree');
+    const submitBtn = document.getElementById('submitBtn');
+    function toggleSubmit() {
+      submitBtn.disabled = !agreeBox.checked;
+    }
+    agreeBox.addEventListener('change', toggleSubmit);
+    // Initialize state
     window.addEventListener('load', () => {
-      initPhoneInputLogin();
+      submitBtn.disabled = !agreeBox.checked;
+      initPhoneInput();
       setupPasswordToggles();
     });
   </script>
+  <!-- International telephone input script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js"></script>
 <script src="./supabase-client.js"></script>
 <script src="./session.js"></script>
-<script src="./login.api.js"></script>
+<script src="./register.api.js"></script>
 </body>
 </html>

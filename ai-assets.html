@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Power Levels</title>
+  <style>
+    :root {
+      /* Base colours drawn from the member levels page to unify the site */
+      --bg: #05070b;
+      --panel: #0f1720;
+      --panel2: #0b1118;
+      --line: rgba(255,255,255,.08);
+      --muted: rgba(255,255,255,.68);
+      --text: rgba(255,255,255,.92);
+      --gold1: #f6c453;
+      --gold2: #f5e3a4;
+      --ok: #46e6a5;
+      --danger: #ff6b6b;
+      --shadow: 0 18px 45px rgba(0,0,0,.55);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(246,196,83,.10), transparent 55%),
+        radial-gradient(700px 420px at 95% 12%, rgba(130,170,255,.10), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: 50px;
+      padding: 0 14px;
+      background: rgba(5,7,11,.55);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      font-weight: 750;
+      letter-spacing: 0.3px;
+    }
+    header .back-btn {
+      position: absolute;
+      left: 14px;
+      color: var(--gold1);
+      font-size: 20px;
+      text-decoration: none;
+    }
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 16px 12px calc(30px + 100px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    /* Hero summarising daily stats */
+    .hero {
+      position: relative;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(700px 200px at 12% 18%, rgba(246,196,83,.16), transparent 60%),
+        radial-gradient(600px 220px at 92% 20%, rgba(96,165,250,.12), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .hero h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+    .hero p {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .progress-bar-wrap {
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.66);
+      border-radius: 14px;
+      overflow: hidden;
+      height: 8px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      transition: width .4s ease;
+    }
+    .hero button {
+      align-self: flex-start;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 750;
+      color: rgba(0,0,0,.92);
+      cursor: pointer;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .hero button:active {
+      transform: scale(.98);
+      filter: brightness(1.05);
+    }
+    /* Stats small cards */
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .stat-card {
+      flex: 1;
+      min-width: 180px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-card h3 {
+      font-size: 0.8rem;
+      font-weight: 650;
+      color: var(--muted);
+    }
+    .stat-card .value {
+      font-size: 1.8rem;
+      font-weight: 850;
+      letter-spacing: .2px;
+      color: var(--gold1);
+    }
+    /* Level cards grid */
+    .level-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .level-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      box-shadow: var(--shadow);
+      height: 100%;
+    }
+    .level-card header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .level-card .label {
+      font-size: 1rem;
+      font-weight: 750;
+    }
+    .level-card .status {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.28);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status.locked {
+      color: var(--danger);
+      border-color: rgba(255,107,107,.35);
+      background: rgba(255,107,107,.10);
+    }
+    .status.unlocked {
+      color: var(--ok);
+      border-color: rgba(70,230,165,.35);
+      background: rgba(70,230,165,.10);
+    }
+    .level-card .details {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .level-card button {
+      align-self: flex-start;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 750;
+      color: rgba(0,0,0,.92);
+      cursor: pointer;
+      margin-top: auto;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .level-card button:active {
+      transform: scale(.98);
+      filter: brightness(1.05);
+    }
+    .level-card .note {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    @media (max-width: 600px) {
+      header {
+        font-size: 0.95rem;
+      }
+      .stat-card .value {
+        font-size: 1.5rem;
+      }
+      .level-card .label {
+        font-size: 0.9rem;
+      }
+    }
+  
+    /* Robot (Lottie) */
+    /* Robot (Lottie) - centered premium hero */
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 22px;
+      min-height: 210px;
+      gap: 0;
+    }
+    .hero-robot{
+      position: relative;
+      width: 190px;
+      height: 190px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140px 140px at 30% 28%, rgba(246,196,83,.10), transparent 60%),
+        radial-gradient(160px 160px at 78% 22%, rgba(96,165,250,.10), transparent 62%),
+        rgba(16,27,32,.28);
+      box-shadow: 0 22px 55px rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero-robot::before{
+      content:"";
+      position:absolute;
+      inset:-44px;
+      background: radial-gradient(circle at 50% 50%, rgba(246,196,83,.20), transparent 55%);
+      filter: blur(12px);
+      opacity: .95;
+      pointer-events:none;
+    }
+    .hero-robot::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: 22px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      pointer-events:none;
+    }
+    .hero-robot .robot-inner{
+      width:100%;
+      height:100%;
+      transform: scale(1.16);
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,.55));
+    }
+    @media (max-width: 680px){
+      .hero{ min-height: 190px; }
+      .hero-robot{ width: 165px; height: 165px; }
+      .hero-robot .robot-inner{ transform: scale(1.14); }
+    }
+    @media (max-width: 420px){
+      .hero{ min-height: 175px; padding: 18px; }
+      .hero-robot{ width: 150px; height: 150px; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .hero-robot{ display:none; }
+    }
+
+
+
+    /* Bottom-sheet modal (mobile first) */
+    .modal-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 14px;
+      z-index: 200;
+    }
+    .modal-backdrop.show{ display:flex; }
+    .sheet{
+      width: min(560px, 100%);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+    .modal-backdrop.show .sheet{ transform: translateY(0); opacity:1; }
+    .sheet-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    }
+    .sheet-title{ font-weight: 850; letter-spacing: .2px; }
+    .sheet-close{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-weight: 750;
+      cursor:pointer;
+    }
+    .sheet-body{ padding: 14px; display:flex; flex-direction:column; gap: 10px; }
+    .sheet-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .mini{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      border-radius: 14px;
+      padding: 10px;
+    }
+    .mini .k{ color: var(--muted); font-size: .75rem; }
+    .mini .v{ font-size: 1.05rem; font-weight: 850; margin-top: 4px; }
+    .sheet-actions{ display:flex; gap:10px; }
+    .btn-primary{
+      flex:1;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      border:none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 850;
+      color: rgba(0,0,0,.92);
+      cursor:pointer;
+    }
+    .btn-ghost{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor:pointer;
+    }
+    .dots{ display:flex; gap:6px; align-items:center; }
+    .dot{ width:8px; height:8px; border-radius:99px; border:1px solid var(--line); background: rgba(255,255,255,.10); }
+    .dot.on{ background: linear-gradient(90deg, var(--gold1), var(--gold2)); border-color: rgba(245,227,164,.55); }
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(16,27,32,.92);
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      display:none;
+      z-index: 300;
+      max-width: calc(100% - 28px);
+      text-align:center;
+    }
+    .toast.show{ display:block; }
+
+    @media (min-width: 720px){
+      .modal-backdrop{ align-items:center; }
+    }
+
+
+/* Modal (V1/V2) */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease;
+      z-index: 1000;
+    }
+    .modal{
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      transform: translateY(6px);
+      z-index: 1010;
+      padding: 14px;
+      padding-top: calc(14px + env(safe-area-inset-top));
+      padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    }
+    .modal.open, .modal-backdrop.open{
+      opacity:1;
+      pointer-events:auto;
+      transform: translateY(0);
+    }
+    .modal-card{
+      width: min(820px, 100%);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(15,23,32,.98), rgba(11,17,24,.98));
+      box-shadow: 0 28px 100px rgba(0,0,0,.75);
+      overflow:hidden;
+      max-height: calc(100dvh - 40px);
+      display:flex;
+      flex-direction: column;
+    }
+    .modal-head{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0,0,0,.16);
+    }
+    .modal-head-left{min-width:0}
+    .modal-kicker{font-size: 0.75rem; color: var(--muted)}
+    .modal-title{
+      font-size: 1.05rem;
+      font-weight: 850;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .modal-close{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.28);
+      color: var(--text);
+      cursor:pointer;
+      font-size: 16px;
+    }
+    .modal-body{
+      padding: 14px;
+      overflow:auto;
+    }
+    .info-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .info{
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 12px;
+    }
+    .info-label{font-size:.75rem; color: var(--muted)}
+    .info-value{font-size:.95rem; font-weight: 850; margin-top: 6px}
+    .progress-head{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      font-size: .85rem;
+      margin-top: 6px;
+    }
+    .progress-label{color: rgba(255,255,255,.88)}
+    .progress-time{color: var(--muted)}
+    .modal-progress{
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.66);
+      border-radius: 14px;
+      overflow:hidden;
+      height: 10px;
+      margin-top: 10px;
+    }
+    .modal-progress-fill{
+      height:100%;
+      width:0%;
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      transition: width .18s linear;
+    }
+    .steps{
+      display:grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .step{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 12px;
+      font-size: .9rem;
+      color: rgba(255,255,255,.88);
+    }
+    .bullet{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.30);
+    }
+    .step.active .bullet{
+      background: var(--gold1);
+      border-color: rgba(246,196,83,.55);
+      box-shadow: 0 0 16px rgba(246,196,83,.22);
+    }
+    .step.done .bullet{
+      background: var(--ok);
+      border-color: rgba(70,230,165,.55);
+      box-shadow: 0 0 16px rgba(70,230,165,.18);
+    }
+    .result{
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 14px;
+    }
+    .result-label{font-size:.8rem; color: var(--muted)}
+    .result-value{font-size: 1.9rem; font-weight: 900; margin-top: 6px}
+    .result-sub{font-size:.8rem; color: var(--muted); margin-top: 6px}
+    .note-box{
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,107,107,.35);
+      background: rgba(255,107,107,.10);
+      padding: 12px;
+    }
+    .note-title{font-size:.8rem; font-weight: 900}
+    .note-text{font-size:.8rem; color: rgba(255,255,255,.86); margin-top: 6px}
+    .modal-actions{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(15,23,32,0), rgba(11,17,24,.92) 22%, rgba(11,17,24,.98));
+      padding-top: 12px;
+      padding-bottom: 2px;
+    }
+    .modal-btn{
+      border:none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+    }
+    .modal-btn:active{transform: scale(.98); filter: brightness(1.05)}
+    .modal-btn.primary{
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      color: rgba(0,0,0,.92);
+    }
+    .modal-btn.secondary{
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+    .modal-btn[disabled]{opacity:.55; cursor:not-allowed}
+    @media (max-width: 720px){
+      .info-grid{grid-template-columns: 1fr}
+      .modal-actions{grid-template-columns: 1fr}
+    }
+
+</style>
+</head>
+<body>
+  <header>
+    <a href="myassets.html" class="back-btn">&#x2190;</a>
+    AI Power Levels
+  </header>
+  <main>
+    <!-- Hero section summarising daily usage and progress --> 
+    <section class="hero">
+      <div class="hero-robot hero-robot-center" aria-hidden="true"><div class="robot-inner" id="heroRobot"></div></div>
+    </section>
+    <!-- Small stats overview -->
+    <section class="stats">
+      <div class="stat-card">
+        <h3>Remaining Runs Today</h3>
+        <div class="value" id="runsLeft">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Runs Per Day</h3>
+        <div class="value" id="totalRuns">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Run Room</h3>
+        <div class="value">—</div>
+      </div>
+    </section>
+    <!-- List of 7 membership levels -->
+    <section class="level-list">
+      <!-- GPU 3 cores -->
+      <div class="level-card" id="cardV1">
+        <header>
+          <div class="label">GPU 3 cores</div>
+          <div class="status locked">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V1</div>
+          <div>Today's Profit: 1.5%–2.5%</div>
+          <div>Min Investment: 50–1000 USDT</div>
+          <div>Run Time: 10 sec</div>
+        </div>
+        <button data-action="unlock" data-level="V1">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+      <!-- GPU 5 cores -->
+      <div class="level-card" id="cardV2">
+        <header>
+          <div class="label">GPU 5 cores</div>
+          <div class="status locked">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V2</div>
+          <div>Today's Profit: 1.8%–2.8%</div>
+          <div>Min Investment: 500–3000 USDT</div>
+          <div>Run Time: 13 sec</div>
+        </div>
+        <button data-action="unlock" data-level="V2">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+      <!-- GPU 10 cores-->
+      <div class="level-card" id="cardV1" data-level="V1">
+        <header>
+          <div class="label">GPU 10 cores</div>
+          <div class="status locked" id="statusV1">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V3</div>
+          <div>Today's Profit: 2.0%–3.0%</div>
+          <div>Min Investment: 3000–5000 USDT</div>
+          <div>Run Time: 18 sec</div>
+        </div>
+        <button data-action="coming">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+      <!-- GPU 17 cores -->
+      <div class="level-card">
+        <header>
+          <div class="label">GPU 17 cores</div>
+          <div class="status locked">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V4</div>
+          <div>Today's Profit: 2.2%–3.2%</div>
+          <div>Min Investment: 6000–9000 USDT</div>
+          <div>Run Time: 21 sec</div>
+        </div>
+        <button data-action="coming">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+      <!-- GPU 37 cores -->
+      <div class="level-card">
+        <header>
+          <div class="label">GPU 37 cores</div>
+          <div class="status locked">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V5</div>
+          <div>Today's Profit: 2.5%–3.5%</div>
+          <div>Min Investment: 10000–13000 USDT</div>
+          <div>Run Time: 23 sec</div>
+        </div>
+        <button data-action="coming">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+      <!-- GPU 53 cores -->
+      <div class="level-card">
+        <header>
+          <div class="label">GPU 53 cores</div>
+          <div class="status locked">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V6</div>
+          <div>Today's Profit: 2.8%–3.8%</div>
+          <div>Min Investment: 15000–18000 USDT</div>
+          <div>Run Time: 33 sec</div>
+        </div>
+        <button data-action="coming">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+      <!-- GPU 87 cores -->
+      <div class="level-card">
+        <header>
+          <div class="label">GPU 87 cores</div>
+          <div class="status locked">Locked</div>
+        </header>
+        <div class="details">
+          <div>Level: V7</div>
+          <div>Today's Profit: 3.0%–4.0%</div>
+          <div>Min Investment: 20000–100000 USDT</div>
+          <div>Run Time: 53 sec</div>
+        </div>
+        <button data-action="coming">Unlock Now</button>
+        <p class="note">Activate to start earning daily income.</p>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- Mobile-friendly bottom sheet for Unlock / Run -->
+  <div class="modal-backdrop" id="unlockModal" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+      <div class="sheet-head">
+        <div>
+          <div class="sheet-title" id="sheetTitle">Unlock</div>
+          <div style="color: var(--muted); font-size:.8rem; margin-top:2px;" id="sheetSub">—</div>
+        </div>
+        <button class="sheet-close" type="button" data-action="closeSheet">Close</button>
+      </div>
+      <div class="sheet-body">
+        <div class="sheet-grid">
+          <div class="mini">
+            <div class="k">Balance</div>
+            <div class="v" id="mBalance">0</div>
+          </div>
+          <div class="mini">
+            <div class="k">Total Profit</div>
+            <div class="v" id="mTotalProfit">0</div>
+          </div>
+          <div class="mini">
+            <div class="k">Profit Per Click</div>
+            <div class="v" id="mPerClick">0</div>
+          </div>
+          <div class="mini">
+            <div class="k">Progress</div>
+            <div class="v"><span id="mProgressText">0/0</span></div>
+            <div class="dots" id="mDots" style="margin-top:8px;"></div>
+          </div>
+        </div>
+
+        <div class="mini">
+          <div class="k">Earned Now</div>
+          <div class="v" id="mEarned">0</div>
+        </div>
+
+        <div class="sheet-actions">
+          <button class="btn-primary" type="button" id="runBtn">Run</button>
+          <button class="btn-ghost" type="button" id="setBalanceBtn">Set Balance</button>
+        </div>
+
+        <div style="color: var(--muted); font-size:.78rem; line-height:1.4;">
+          Tip: this is ready for future DB/API connection. Now it uses local storage.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast">—</div>
+
+<!-- Robot animation: prefer local .lottie, fallback to local JSON -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+    <script>
+    (function () {
+      var host = document.getElementById('heroRobot');
+      if (!host || !window.lottie) return;
+
+      var anim = window.lottie.loadAnimation({
+        container: host,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'assets/robot.json',
+        rendererSettings: { preserveAspectRatio: 'xMidYMid meet' }
+      });
+
+      if (anim) anim.setSpeed(0.9);
+    })();
+  </script>
+  <script src="app.js"></script>
+
+<!-- Modal: V1/V2 session -->
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-head-left">
+          <div class="modal-kicker">AI Processing Session</div>
+          <h3 class="modal-title" id="modalTitle">—</h3>
+        </div>
+        <button class="modal-close" id="closeModal" type="button" aria-label="Close">&#x2715;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="info-grid">
+          <div class="info">
+            <div class="info-label">Run time</div>
+            <div class="info-value" id="runTimeText">—</div>
+          </div>
+          <div class="info">
+            <div class="info-label">Profit rate</div>
+            <div class="info-value" id="rateText">—</div>
+          </div>
+          <div class="info">
+            <div class="info-label">Balance</div>
+            <div class="info-value"><span id="modalBalance">0.00</span> <span class="muted">USDT</span></div>
+          </div>
+        </div>
+
+        <div class="progress-head">
+          <div class="progress-label" id="progressLabel">Ready</div>
+          <div class="progress-time" id="timeLeft">—</div>
+        </div>
+        <div class="modal-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="modal-progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+
+        <div class="steps" id="steps">
+          <div class="step"><span class="bullet"></span><span class="text">Initialize GPU cores</span></div>
+          <div class="step"><span class="bullet"></span><span class="text">Load market data</span></div>
+          <div class="step"><span class="bullet"></span><span class="text">Run prediction model</span></div>
+          <div class="step"><span class="bullet"></span><span class="text">Optimize execution</span></div>
+          <div class="step"><span class="bullet"></span><span class="text">Generate profit</span></div>
+        </div>
+
+        <div class="result">
+          <div class="result-label">Profit generated</div>
+          <div class="result-value"><span id="profitValue">0.00</span> <span class="muted">USDT</span></div>
+          <div class="result-sub" id="resultSub">Start the session to calculate profit.</div>
+        </div>
+
+        <div class="note-box" id="lockNote" hidden>
+          <div class="note-title">Not eligible</div>
+          <div class="note-text" id="lockNoteText">—</div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-btn primary" id="startBtn" type="button">Start AI Session</button>
+          <button class="modal-btn secondary" id="claimBtn" type="button" disabled>Claim</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./supabase-client.js"></script>
+<script src="./session.js"></script>
+<script src="./ai-assets.api.js"></script>
+</body>
+</html>

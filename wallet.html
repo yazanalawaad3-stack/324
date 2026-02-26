@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Wallet • Deposit</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap (layout utilities) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body class="lux-body lux-solid-bg lux-wallet-page">
+  <div class="lux-app lux-page lux-app--page">
+
+    <!-- Header -->
+    <header class="lux-head lux-head-tight" aria-label="Wallet header">
+      <a class="lux-back" href="./myassets.html" aria-label="Back">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      </a>
+
+      <div class="lux-head-title">
+        <div class="lux-h1">Wallet</div>
+        <div class="lux-h2">USDT Deposit • BEP20</div>
+      </div>
+
+      <button class="lux-gear-fab" id="walletRefreshBtn" type="button" aria-label="Refresh">
+        <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <main class="lux-main">
+      <section class="lux-card lux-wallet-card" aria-label="Deposit card">
+
+        <div class="lux-wallet-grid">
+          <div class="lux-field">
+            <div class="lux-field-label">Deposit Currency</div>
+            <div class="lux-field-pill" role="button" aria-label="Currency">
+              <span class="lux-coin">
+                <img src="./usdt_coin.webp" alt="USDT" />
+              </span>
+              <span class="lux-field-value">USDT</span>
+              <span class="lux-field-meta">Tether</span>
+            </div>
+          </div>
+
+          <div class="lux-field">
+            <div class="lux-field-label">Deposit Network</div>
+            <div class="lux-net-pill" role="group" aria-label="Network">
+              <button class="lux-net-chip active" type="button" aria-pressed="true">BEP20</button>
+              <button class="lux-net-chip" type="button" aria-pressed="false" disabled>TRC20</button>
+              <button class="lux-net-chip" type="button" aria-pressed="false" disabled>ERC20</button>
+            </div>
+            <div class="lux-net-hint">This address supports deposits of BEP20 USDT only.</div>
+          </div>
+        </div>
+
+        <div class="lux-qr-wrap" aria-label="QR code">
+          <div class="lux-qr-frame">
+            <canvas id="qrCanvas" width="220" height="220" aria-label="USDT BEP20 QR"></canvas>
+            <img id="qrImg" class="lux-qr-img" alt="USDT BEP20 QR" loading="lazy" />
+          </div>
+          <div class="lux-qr-sub">Scan to copy the address instantly</div>
+        </div>
+
+        <div class="lux-field mt-3">
+          <div class="lux-field-label">Deposit Address</div>
+          <div class="lux-address-pill" role="group" aria-label="Deposit address">
+            <span class="lux-addr-text" id="walletAddressText">0x3D0953e33bcdB79A963c6A1Ad83cECEd01a27e5b</span>
+            <button class="lux-copy" id="copyAddressBtn" type="button" aria-label="Copy address">
+              <i class="fa-regular fa-copy" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="lux-card lux-note-card mt-3" aria-label="Friendly reminder">
+        <div class="lux-note-title">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Friendly Reminder
+        </div>
+        <ol class="lux-note-list">
+          <li>Please do not recharge any USDT currency that is not a BEP20 network to the above address, otherwise the assets will not be retrieved</li>
+          <li>After you recharge to the above address, the entire network node needs to confirm, and the payment will be made after the network confirms.</li>
+          <li>The minimum recharge amount is: <b>0.1 USDT</b>. Recharge amounts less than the minimum amount will not be posted to the account and cannot be refunded</li>
+          <li>Each time you recharge, you need to go to the recharge page to check the latest address, which will be updated from time to time.</li>
+          <li>Be sure to confirm the security of your computer and browser to prevent information from being tampered with or leaked.</li>
+          <li>Please do not deposit NFT to this address.</li>
+          <li>Recharge through smart contracts is not supported. Do not recharge USDT through BEP20, Arbitrum and Optimism networks.</li>
+        </ol>
+      </section>
+    </main>
+
+    <!-- Toast -->
+    <div class="lux-toast" id="luxToast" role="status" aria-live="polite" aria-atomic="true">
+      <span id="toastText">Copied</span>
+    </div>
+  </div>
+
+  <!-- QR generator -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="./wallet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./supabase-client.js"></script>
+<script src="./session.js"></script>
+<script src="./wallet.api.js"></script>
+</body>
+</html>

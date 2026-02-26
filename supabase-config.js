@@ -1,0 +1,2 @@
+window.LUX_SUPABASE_URL = "https://bqjybkcxfrwyzqremtmr.supabase.co";
+window.LUX_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxanlia2N4ZnJ3eXpxcmVtdG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNjk5MTUsImV4cCI6MjA4NzY0NTkxNX0.s47BfTxt59dmjYw2O1uU16mIaz8v-VQSW6S2cBgK-5I";

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Membership Levels</title>
+  <style>
+    :root{
+      --bg:#05070b;
+      --panel:#0f1720;
+      --panel2:#0b1118;
+      --line:rgba(255,255,255,.08);
+      --muted:rgba(255,255,255,.68);
+      --text:rgba(255,255,255,.92);
+      --gold1:#f6c453;
+      --gold2:#f5e3a4;
+      --ok:#46e6a5;
+      --danger:#ff6b6b;
+      --shadow: 0 18px 45px rgba(0,0,0,.55);
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html,body{ height:100%; }
+    body{
+      background: radial-gradient(900px 420px at 20% 0%, rgba(246,196,83,.10), transparent 55%),
+                  radial-gradient(700px 420px at 95% 12%, rgba(130,170,255,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page{ min-height:100%; display:flex; flex-direction:column; }
+    .topbar{
+      height:46px;
+      display:flex;
+      align-items:center;
+      padding:0 14px;
+      border-bottom:1px solid var(--line);
+      background: rgba(5,7,11,.55);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .topbar .left,.topbar .right{ width:44px; display:flex; align-items:center; }
+    .topbar .title{ flex:1; text-align:center; font-weight:650; letter-spacing:.2px; font-size:15px; }
+    .iconbtn{
+      width:34px; height:34px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .iconbtn:active{ transform: scale(.98); background:rgba(255,255,255,.06); }
+
+    .container{ width:min(980px, 100%); margin: 0 auto; padding: 14px 12px 26px; }
+    .row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(18, 43, 64, .55);
+      font-size:12px;
+      color: rgba(255,255,255,.86);
+    }
+    .pill strong{ font-weight:750; }
+    .pill .badge{
+      width:20px; height:20px;
+      border-radius:50%;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(246,196,83,.30), rgba(245,227,164,.10));
+      border:1px solid rgba(246,196,83,.35);
+    }
+    .hint{
+      font-size:12px;
+      color: var(--muted);
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      padding: 8px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      overflow:auto;
+      scrollbar-width: none;
+      margin-bottom: 12px;
+    }
+    .tabs::-webkit-scrollbar{ display:none; }
+    .tab{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.02);
+      color: rgba(255,255,255,.70);
+      font-size: 12px;
+      cursor:pointer;
+      white-space:nowrap;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+    }
+    .tab[aria-selected="true"]{
+      color: rgba(0,0,0,.92);
+      border-color: rgba(246,196,83,.55);
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      font-weight: 750;
+    }
+
+    .level-nav{
+      position: sticky;
+      top: 46px;
+      z-index: 25;
+      padding: 10px 12px;
+      background: rgba(5,7,11,.55);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .level-nav .tabs{
+      margin: 0 auto;
+      width: min(980px, 100%);
+      background: rgba(255,255,255,.03);
+    }
+
+    .hero{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(700px 200px at 12% 18%, rgba(246,196,83,.16), transparent 60%),
+        radial-gradient(600px 220px at 92% 20%, rgba(96, 165, 250, .12), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    .hero-inner{
+      padding: 14px 14px 12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+    }
+    .lvl{
+      font-size: 26px;
+      font-weight: 850;
+      letter-spacing: .4px;
+    }
+    .lockline{
+      margin-top: 6px;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+    }
+    .lockdot{
+      width:10px; height:10px; border-radius:50%;
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(255,107,107,.14);
+    }
+    .lockline.unlocked .lockdot{ background: var(--ok); box-shadow: 0 0 0 3px rgba(70,230,165,.14); }
+    .hero-art{
+      width: 80px; height: 80px;
+      flex: 0 0 auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+    .hero-art img{ width: 62px; height: 62px; opacity:.95; object-fit:contain; display:block; }
+
+    .section-title{
+      margin: 12px 2px 10px;
+      font-size: 13px;
+      font-weight: 720;
+      color: rgba(255,255,255,.90);
+    }
+
+    .progress{
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.66);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .progress-top{
+      display:flex; justify-content:space-between;
+      font-size: 11px; color: rgba(255,255,255,.64);
+      margin-bottom: 8px;
+    }
+    .bar{
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .bar > div{
+      height:100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      transition: width .45s ease;
+    }
+    .dots{
+      display:flex;
+      justify-content:space-between;
+      margin-top: 10px;
+      padding: 0 6px;
+    }
+    .dot{
+      width:10px; height:10px;
+      border-radius:50%;
+      border: 1px solid rgba(246,196,83,.75);
+      background: rgba(0,0,0,.18);
+    }
+    .dot.on{
+      background: rgba(246,196,83,.85);
+      box-shadow: 0 0 0 4px rgba(246,196,83,.10);
+    }
+
+    .cards{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 8px; }
+    @media (max-width: 640px){ .cards{ grid-template-columns: 1fr; } }
+
+    .card{
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 12px;
+    }
+    .cardhead{
+      display:flex; align-items:center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .mini{
+      width: 28px; height: 28px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      display:grid; place-items:center;
+    }
+    .mini svg{ width: 16px; height: 16px; opacity:.92; }
+    .cardhead .label{
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      font-weight: 650;
+    }
+    .value{
+      font-size: 20px;
+      font-weight: 850;
+      letter-spacing: .2px;
+      margin-bottom: 4px;
+    }
+    .sub{
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+      line-height: 1.35;
+    }
+    .tip{
+      margin: 8px 2px 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+    }
+
+    .benefits{
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 12px;
+    }
+    .benefits-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 640px){ .benefits-grid{ grid-template-columns: 1fr; } }
+    .benefit{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+      padding: 10px;
+    }
+    .btop{ display:flex; align-items:center; gap: 10px; margin-bottom: 6px; }
+    .bname{ font-size: 12px; font-weight: 760; color: rgba(255,255,255,.86); }
+    .bdesc{ font-size: 12px; color: rgba(255,255,255,.68); }
+    .split{
+      display:flex; gap: 10px; flex-wrap:wrap; margin-top: 6px;
+      font-size: 12px; color: rgba(255,255,255,.70);
+    }
+    .chip{
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+
+    .footer-actions{
+      margin-top: 12px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.92);
+      font-weight: 750;
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{ transform: scale(.99); }
+    .btn.primary{
+      border: none;
+      color: rgba(0,0,0,.92);
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+    }
+    .btn svg{ width: 16px; height: 16px; }
+
+    .modal{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      background: rgba(0,0,0,.58);
+      z-index: 60;
+    }
+    .modal.show{ display:flex; }
+    .modal-card{
+      width: min(460px, 92vw);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(15,23,32,.96);
+      box-shadow: 0 22px 55px rgba(0,0,0,.65);
+      overflow:hidden;
+    }
+    .modal-head{
+      padding: 14px 14px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      gap: 10px;
+    }
+    .modal-title{ font-size: 14px; font-weight: 850; color: rgba(255,255,255,.92); }
+    .modal-x{
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .modal-body{ padding: 12px 14px 12px; }
+    .modal-text{
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255,255,255,.78);
+    }
+    .modal-actions{
+      padding: 0 14px 14px;
+      display:flex;
+      gap: 10px;
+    }
+    .modal-actions .btn{ flex:1; justify-content:center; }
+
+    .sr-only{
+      position:absolute;
+      width:1px; height:1px;
+      padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0);
+      white-space:nowrap; border:0;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="left">
+        <button class="iconbtn" id="backBtn" type="button" aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="title">Member</div>
+      <div class="right">
+</div>
+    </header>
+
+    <div class="level-nav" aria-label="Levels">
+      <div class="tabs" role="tablist" aria-label="Levels">
+        <button class="tab" role="tab" aria-selected="false" data-level="V1" type="button">V1</button>
+        <button class="tab" role="tab" aria-selected="false" data-level="V2" type="button">V2</button>
+        <button class="tab" role="tab" aria-selected="false" data-level="V3" type="button">V3</button>
+        <button class="tab" role="tab" aria-selected="false" data-level="V4" type="button">V4</button>
+        <button class="tab" role="tab" aria-selected="false" data-level="V5" type="button">V5</button>
+        <button class="tab" role="tab" aria-selected="false" data-level="V6" type="button">V6</button>
+        <button class="tab" role="tab" aria-selected="false" data-level="V7" type="button">V7</button>
+      </div>
+    </div>
+
+    <main class="container" id="app">
+<section class="hero" aria-label="Selected level">
+        <div class="hero-inner">
+          <div>
+            <div class="lvl" id="heroLevel">V1</div>
+            <div class="lockline" id="heroLock">
+              <span class="lockdot" aria-hidden="true"></span>
+              <span id="heroLockText">Locked</span>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <img src="usdt_coin.webp" alt="" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <section class="cards" aria-label="Stats">
+        <div class="card">
+          <div class="cardhead">
+            <span class="mini" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2v20" stroke="currentColor" stroke-width="1.8" opacity=".45"/>
+                <path d="M7 6.5c.7-2 9.3-2 10 0 .7 2-1.1 3.6-5 3.6S6.3 8.5 7 6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M7 17.5c.7 2 9.3 2 10 0 .7-2-1.1-3.6-5-3.6s-5.7 1.6-5 3.6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div class="label">USDT Balance</div>
+          </div>
+          <div class="value" id="balanceText">0 / 50</div>
+          <div class="sub" id="balanceSub">Balance needed for this level</div>
+        </div>
+
+        <div class="card">
+          <div class="cardhead">
+            <span class="mini" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M16 11c1.9 0 3.5-1.6 3.5-3.5S17.9 4 16 4s-3.5 1.6-3.5 3.5S14.1 11 16 11Z" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M8 12c2.2 0 4-1.8 4-4S10.2 4 8 4 4 5.8 4 8s1.8 4 4 4Z" stroke="currentColor" stroke-width="1.8" opacity=".85"/>
+                <path d="M3.5 20c0-2.6 2.6-4.7 5.8-4.7 1.8 0 3.4.6 4.5 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M12.2 20c0-2.1 2.1-3.8 4.7-3.8S21.5 17.9 21.5 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".85"/>
+              </svg>
+            </span>
+            <div class="label">Effective Users</div>
+          </div>
+          <div class="value" id="usersText">0 / 0</div>
+          <div class="sub" id="usersSub">Direct referrals that reached VIP status</div>
+        </div>
+      </section>
+
+      <div class="tip" id="tipText">Effective user: VIP level 1 and above counts as valid.</div>
+
+      <div class="section-title" id="benefitsTitle">Level Benefits</div>
+      <section class="benefits" aria-label="Benefits">
+        <div class="benefits-grid" id="benefitsGrid"></div>
+</section>
+    </main>
+  </div>
+
+  <div class="modal" id="achieveModal" role="dialog" aria-modal="true" aria-label="Achievement modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">Requirements Achieved</div>
+        <button class="modal-x" id="modalClose" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text" id="modalText"></p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="modalLater" type="button">Later</button>
+        <button class="btn primary" id="modalOk" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      currentLevel: "V1",
+      nextLevel: "V7",
+      profile: { balance: 0, users: 0 },
+      levels: {
+        V1: {
+          balanceReq: 50,
+          usersReq: 0,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "500 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "2 levels" }]
+        },
+        V2: {
+          balanceReq: 500,
+          usersReq: 5,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "1000 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "3 levels" }]
+        },
+        V3: {
+          balanceReq: 3000,
+          usersReq: 10,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "2000 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "4 levels" }],
+          special: { title: "V3 Requirements Achieved", text: "You have met the V3 requirements. Please contact support to activate this tier." }
+        },
+        V4: {
+          balanceReq: 6000,
+          usersReq: 15,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "3000 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "5 levels" }]
+        },
+        V5: {
+          balanceReq: 10000,
+          usersReq: 20,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "5000 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "6 levels" }]
+        },
+        V6: {
+          balanceReq: 15000,
+          usersReq: 25,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "7000 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "7 levels" }]
+        },
+        V7: {
+          balanceReq: 20000,
+          usersReq: 30,
+          benefits: [
+            { name: "Min Withdrawal", desc: "20 USDT" },
+            { name: "Max Withdrawal", desc: "9000 USDT" },
+            { name: "Withdrawal Fee", desc: "5%" },
+            { name: "Team Income Depth", desc: "8 levels" }]
+        }
+      }
+    };
+    const orderedLevels = Object.keys(data.levels).sort((a,b) => {
+      const na = parseInt(a.slice(1), 10);
+      const nb = parseInt(b.slice(1), 10);
+      return na - nb;
+    });
+
+    function getNextLevel(levelKey){
+      const idx = orderedLevels.indexOf(levelKey);
+      if (idx === -1) return data.nextLevel || "-";
+      return orderedLevels[idx + 1] || "-";
+    }
+
+
+    const els = {
+      heroLevel: document.getElementById("heroLevel"),
+      heroLock: document.getElementById("heroLock"),
+      heroLockText: document.getElementById("heroLockText"),
+      balanceText: document.getElementById("balanceText"),
+      balanceSub: document.getElementById("balanceSub"),
+      usersText: document.getElementById("usersText"),
+      usersSub: document.getElementById("usersSub"),
+      barFill: document.getElementById("barFill"),
+      dot1: document.getElementById("dot1"),
+      dot2: document.getElementById("dot2"),
+      dot3: document.getElementById("dot3"),
+      benefitsGrid: document.getElementById("benefitsGrid"),
+      achieveModal: document.getElementById("achieveModal"),
+      modalTitle: document.getElementById("modalTitle"),
+      modalText: document.getElementById("modalText"),
+      modalClose: document.getElementById("modalClose"),
+      modalLater: document.getElementById("modalLater"),
+      modalOk: document.getElementById("modalOk"),      backBtn: document.getElementById("backBtn"),
+      tabs: Array.from(document.querySelectorAll(".tab"))
+    };
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function computeProgress(levelKey){
+      const lvl = data.levels[levelKey];
+      const b = data.profile.balance;
+      const u = data.profile.users;
+      const balancePct = lvl.balanceReq === 0 ? 1 : clamp(b / lvl.balanceReq, 0, 1);
+      const usersPct = lvl.usersReq === 0 ? 1 : clamp(u / lvl.usersReq, 0, 1);
+      const pct = Math.round(((balancePct + usersPct) / 2) * 100);
+      const achieved = balancePct >= 1 && usersPct >= 1;
+      return { pct, achieved, balancePct, usersPct };
+    }
+
+    function renderBenefits(levelKey){
+      const lvl = data.levels[levelKey];
+      els.benefitsGrid.innerHTML = "";
+      lvl.benefits.forEach((b) => {
+        const div = document.createElement("div");
+        div.className = "benefit";
+
+        const top = document.createElement("div");
+        top.className = "btop";
+
+        const icon = document.createElement("span");
+        icon.className = "mini";
+        icon.setAttribute("aria-hidden","true");
+        icon.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+            <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="1.7" opacity=".45"/>
+          </svg>
+        `;
+
+        const name = document.createElement("div");
+        name.className = "bname";
+        name.textContent = b.name;
+
+        top.appendChild(icon);
+        top.appendChild(name);
+
+        const desc = document.createElement("div");
+        desc.className = "bdesc";
+
+        if (b.split){
+          const wrap = document.createElement("div");
+          wrap.className = "split";
+          b.desc.forEach((t) => {
+            const chip = document.createElement("span");
+            chip.className = "chip";
+            chip.textContent = t;
+            wrap.appendChild(chip);
+          });
+          desc.appendChild(wrap);
+        } else {
+          desc.textContent = b.desc;
+        }
+
+        div.appendChild(top);
+        div.appendChild(desc);
+        els.benefitsGrid.appendChild(div);
+      });
+    }
+
+    function setDots(pct){
+      const a = pct >= 34;
+      const b = pct >= 67;
+      const c = pct >= 100;
+      [els.dot1, els.dot2, els.dot3].forEach(d => d.classList.remove("on"));
+      if (a) els.dot1.classList.add("on");
+      if (b) els.dot2.classList.add("on");
+      if (c) els.dot3.classList.add("on");
+    }
+
+    function setLock(achieved){
+      els.heroLock.classList.toggle("unlocked", achieved);
+      els.heroLockText.textContent = achieved ? "Unlocked" : "Locked";
+    }
+
+    function updateStats(levelKey){
+      const lvl = data.levels[levelKey];
+      const b = data.profile.balance;
+      const u = data.profile.users;
+      els.balanceText.textContent = `${b} / ${lvl.balanceReq}`;
+      els.usersText.textContent = `${u} / ${lvl.usersReq}`;
+      els.balanceSub.textContent = `Balance needed for ${levelKey}`;
+      els.usersSub.textContent = `Effective users needed for ${levelKey}`;
+    }
+
+    function selectLevel(levelKey){
+      els.tabs.forEach((t) => {
+        t.setAttribute("aria-selected", t.dataset.level === levelKey ? "true" : "false");
+      });
+
+      els.heroLevel.textContent = levelKey;
+const { pct, achieved } = computeProgress(levelKey);
+      if (els.barFill) els.barFill.style.width = `${pct}%`;
+      if (els.dot1 && els.dot2 && els.dot3) setDots(pct);
+      setLock(achieved);
+      updateStats(levelKey);
+      renderBenefits(levelKey);
+
+      const lvl = data.levels[levelKey];
+      if (achieved && lvl.special){
+        openModal(lvl.special.title, lvl.special.text);
+      }
+    }
+
+    function openModal(title, text){
+      els.modalTitle.textContent = title;
+      els.modalText.textContent = text;
+      els.achieveModal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal(){
+      els.achieveModal.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function init(){
+els.tabs.forEach((t) => {
+        t.addEventListener("click", () => selectLevel(t.dataset.level));
+      });
+
+      els.modalClose.addEventListener("click", closeModal);
+      els.modalLater.addEventListener("click", closeModal);
+      els.modalOk.addEventListener("click", closeModal);
+      els.achieveModal.addEventListener("click", (e) => {
+        if (e.target === els.achieveModal) closeModal();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+      });
+      els.backBtn.addEventListener("click", () => { window.location.href = "myassets.html"; });
+      selectLevel(data.currentLevel || "V1");
+    }
+
+    init();
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./supabase-client.js"></script>
+<script src="./session.js"></script>
+<script src="./member.api.js"></script>
+</body>
+</html>
