@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Investment Plans</title>
+  <style>
+    :root {
+      /* Match site reference style */
+      --bg: #05070b;
+      --panel: #0f1720;
+      --panel2: #0b1118;
+      --line: rgba(255,255,255,.08);
+      --muted: rgba(255,255,255,.68);
+      --text: rgba(255,255,255,.92);
+      --gold1: #f6c453;
+      --gold2: #f5e3a4;
+      --ok: #46e6a5;
+      --danger: #ff6b6b;
+      --shadow: 0 18px 45px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(246,196,83,.10), transparent 55%),
+        radial-gradient(700px 420px at 95% 12%, rgba(130,170,255,.10), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: 50px;
+      padding: 0 14px;
+      background: rgba(5,7,11,.55);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      font-weight: 750;
+      letter-spacing: .3px;
+    }
+    header .back-btn{
+      position:absolute;
+      left:14px;
+      color: var(--gold1);
+      font-size: 20px;
+      text-decoration:none;
+    }
+
+    main{
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 16px 12px calc(30px + 60px);
+      flex: 1;
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    .hero{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(700px 200px at 12% 18%, rgba(246,196,83,.16), transparent 60%),
+        radial-gradient(600px 220px at 92% 20%, rgba(96,165,250,.12), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+    .hero h2{
+      font-size: 1.2rem;
+      font-weight: 850;
+    }
+    .hero p{
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width: fit-content;
+      font-size: .75rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.28);
+      color: var(--muted);
+    }
+    .pill .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      box-shadow: 0 0 0 4px rgba(246,196,83,.10);
+    }
+
+    .plan-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .plan-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      padding: 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      height: 100%;
+    }
+    .plan-card header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+    }
+    .plan-card .label{
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+    .status{
+      font-size: .75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.28);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .status.fixed{
+      border-color: rgba(246,196,83,.35);
+      background: rgba(246,196,83,.10);
+      color: rgba(246,196,83,.95);
+    }
+
+    .details{
+      font-size: .85rem;
+      line-height: 1.55;
+      color: var(--muted);
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .details b{color: rgba(255,255,255,.90); font-weight: 750;}
+    .kv{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.66);
+    }
+    .kv span:first-child{color: var(--muted); font-size: .8rem;}
+    .kv span:last-child{color: rgba(255,255,255,.92); font-weight: 800; font-size: .85rem;}
+
+    .btn-row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top:auto;
+    }
+    .btn{
+      flex: 1 1 170px;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: .85rem;
+      font-weight: 800;
+      color: rgba(0,0,0,.92);
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+      background: linear-gradient(90deg, var(--gold1), var(--gold2));
+      transition: transform .12s ease, filter .12s ease;
+      min-height: 44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn:active{transform: scale(.98); filter: brightness(1.05);}
+    .btn.secondary{
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .section{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .section h3{
+      font-size: 1.05rem;
+      font-weight: 850;
+      margin-bottom: 8px;
+    }
+    .section p{
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .section h4{
+      font-size: .95rem;
+      font-weight: 850;
+      margin: 12px 0 6px;
+      color: rgba(255,255,255,.90);
+    }
+    .section ul{
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.55;
+    }
+    .section li{margin: 6px 0;}
+
+    details{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(0,0,0,.28);
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+    details summary{
+      cursor:pointer;
+      font-weight: 850;
+      color: rgba(255,255,255,.92);
+      font-size: .92rem;
+      outline:none;
+    }
+    details p{margin-top:10px;margin-bottom:0;}
+
+    footer{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(16,27,32,.62);
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: .85rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 600px){
+      header{font-size:.95rem}
+      .hero h2{font-size: 1.05rem}
+    }
+  
+    /* Added: account + amount input (minimal, keeps original layout) */
+    .account-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 860px){
+      .account-grid{grid-template-columns: 1fr 1fr;}
+    }
+    .mini{
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.28);
+      padding: 12px 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .mini .k{color: rgba(255,255,255,.55); font-size: 13px; font-weight: 750;}
+    .mini .v{font-size: 18px; font-weight: 950;}
+
+    .field{margin-top: 10px;}
+    .field label{
+      display:block;
+      color: rgba(255,255,255,.55);
+      font-weight: 850;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .amount-input{
+      width:100%;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.28);
+      color: var(--text);
+      padding: 14px 14px;
+      font-size: 16px;
+      outline:none;
+      min-height: 48px;
+    }
+    .amount-input:focus{
+      border-color: rgba(246,196,83,.35);
+      box-shadow: 0 0 0 4px rgba(246,196,83,.10);
+    }
+    .metrics{
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .metric{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .metric b{color: rgba(255,255,255,.92); font-weight: 950;}
+    .error{
+      display:none;
+      margin-top: 8px;
+      color: var(--danger);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <a href="myassets.html" class="back-btn" aria-label="Back">&#x2190;</a>
+    Investment Plans
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="pill"><span class="dot"></span><span>Daily cycle reference: Europe/Athens</span></div>
+      <h2>Smart Investment, Locked Term</h2>
+      <p>
+        Choose a plan that matches your goals. Your funds are locked for the full plan duration, returns are calculated daily,
+        and the total (principal + profit) is released at the end of the term.
+      </p>
+    </section>
+
+    
+
+    <section class="section" aria-label="Account">
+      <h3 style="margin:0 0 6px;">Account</h3>
+      <p style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.55;">Available balance and active locked funds.</p>
+      <div class="account-grid">
+        <div class="mini">
+          <div class="k">Available</div>
+          <div class="v" id="availableView">0.00 USDT</div>
+        </div>
+        <div class="mini">
+          <div class="k">Locked</div>
+          <div class="v" id="lockedView">0.00 USDT</div>
+        </div>
+      </div>
+    </section>
+
+<section class="plan-grid" aria-label="Investment plans">
+      <article class="plan-card">
+        <header>
+          <div class="label">Plan 1 — Basic</div>
+          <div class="status">2% – 3% / day</div>
+        </header>
+
+        <div class="kv"><span>Min / Max</span><span>1000 – 2000 USDT</span></div>
+        <div class="kv"><span>Duration</span><span>30 days (locked)</span></div>
+        <div class="kv"><span>Profit credit</span><span>Daily accrual (locked)</span></div>
+        <div class="kv"><span>Release</span><span>Principal + profit at end</span></div>
+
+
+        <div class="field">
+          <label for="amount_P1">Amount (USDT)</label>
+          <input id="amount_P1" class="amount-input" type="number" inputmode="decimal"
+                 placeholder="1000.00" min="1000" max="2000" step="0.01" />
+          <div class="error" id="error_P1">Amount must be between 1,000 and 2,000 USDT.</div>
+        </div>
+
+        <div class="metrics" aria-label="Estimates">
+          <div class="metric"><span>Estimated daily profit</span><b id="daily_P1">0.00 USDT</b></div>
+          <div class="metric"><span>Estimated total profit</span><b id="total_P1">0.00 USDT</b></div>
+          <div class="metric"><span>Maturity value</span><b id="maturity_P1">0.00 USDT</b></div>
+        </div>
+
+        <div class="details">
+          Designed for first-time investors who want a clear, term-based plan with automated operation.
+        </div>
+
+        <div class="btn-row">
+          <a class="btn" href="#" onclick="return startPlan('P1');">Start Plan 1</a>
+          <a class="btn secondary" href="#how">How it works</a>
+        </div>
+      </article>
+
+      <article class="plan-card">
+        <header>
+          <div class="label">Plan 2 — Advanced</div>
+          <div class="status">2.61% – 3.30% / day</div>
+        </header>
+
+        <div class="kv"><span>Min / Max</span><span>2000 – 4000 USDT</span></div>
+        <div class="kv"><span>Duration</span><span>30 days (locked)</span></div>
+        <div class="kv"><span>Profit credit</span><span>Daily accrual (locked)</span></div>
+        <div class="kv"><span>Release</span><span>Principal + profit at end</span></div>
+
+
+        <div class="field">
+          <label for="amount_P2">Amount (USDT)</label>
+          <input id="amount_P2" class="amount-input" type="number" inputmode="decimal"
+                 placeholder="2000.00" min="2000" max="4000" step="0.01" />
+          <div class="error" id="error_P2">Amount must be between 2,000 and 4,000 USDT.</div>
+        </div>
+
+        <div class="metrics" aria-label="Estimates">
+          <div class="metric"><span>Estimated daily profit</span><b id="daily_P2">0.00 USDT</b></div>
+          <div class="metric"><span>Estimated total profit</span><b id="total_P2">0.00 USDT</b></div>
+          <div class="metric"><span>Maturity value</span><b id="maturity_P2">0.00 USDT</b></div>
+        </div>
+
+        <div class="details">
+          A larger capital range enables broader diversification and more efficient liquidity management.
+        </div>
+
+        <div class="btn-row">
+          <a class="btn" href="#" onclick="return startPlan('P2');">Start Plan 2</a>
+          <a class="btn secondary" href="#how">How it works</a>
+        </div>
+      </article>
+
+      <article class="plan-card">
+        <header>
+          <div class="label">Plan 3 — Professional</div>
+          <div class="status fixed">Fixed 4% / day</div>
+        </header>
+
+        <div class="kv"><span>Min / Max</span><span>5000 – 7000 USDT</span></div>
+        <div class="kv"><span>Duration</span><span>30 days (locked)</span></div>
+        <div class="kv"><span>Profit credit</span><span>Daily accrual (locked)</span></div>
+        <div class="kv"><span>Release</span><span>Principal + profit at end</span></div>
+
+
+        <div class="field">
+          <label for="amount_P3">Amount (USDT)</label>
+          <input id="amount_P3" class="amount-input" type="number" inputmode="decimal"
+                 placeholder="5000.00" min="5000" max="7000" step="0.01" />
+          <div class="error" id="error_P3">Amount must be between 5,000 and 7,000 USDT.</div>
+        </div>
+
+        <div class="metrics" aria-label="Estimates">
+          <div class="metric"><span>Estimated daily profit</span><b id="daily_P3">0.00 USDT</b></div>
+          <div class="metric"><span>Estimated total profit</span><b id="total_P3">0.00 USDT</b></div>
+          <div class="metric"><span>Maturity value</span><b id="maturity_P3">0.00 USDT</b></div>
+        </div>
+
+        <div class="details">
+          Limited-capacity tier with prioritized allocation and tighter execution paths to maintain a consistent daily profile.
+        </div>
+
+        <div class="btn-row">
+          <a class="btn" href="#" onclick="return startPlan('P3');">Start Plan 3</a>
+          <a class="btn secondary" href="#how">How it works</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="how" aria-label="How the investment system works">
+      <div class="pill"><span class="dot"></span><span>How the Investment System Works</span></div>
+
+      <h3>How funds are operated within investment plans</h3>
+      <p>
+        Once an investment starts, the full amount is locked for the plan duration (30 days). The locked capital is routed into an automated
+        operating framework designed for capital and liquidity management.
+      </p>
+      <p>
+        The operation is not driven by manual daily decisions. It follows an automated system built around three core functions:
+      </p>
+
+      <h4>1) Data analysis</h4>
+      <p>
+        The system continuously monitors market data such as price movement, liquidity, volatility, spreads, and trading activity, then evaluates
+        opportunities against fixed criteria.
+      </p>
+
+      <h4>2) Strategy execution</h4>
+      <p>
+        When conditions match predefined rules, the system executes operations automatically using multiple strategy paths, including:
+      </p>
+      <ul>
+        <li>Short-term liquidity operations: deploying a portion of capital into faster, lower-risk opportunities.</li>
+        <li>Diversification across strategies: distributing capital across multiple paths to avoid reliance on a single source of performance.</li>
+        <li>Scaled execution: staged entries and exits instead of deploying the full amount at once to reduce the impact of fluctuations.</li>
+      </ul>
+
+      <h4>3) Risk management</h4>
+      <p>
+        The system applies automated protection rules such as staged allocation, volatility-based operation limits, temporary slowdowns or pauses
+        during unfavorable conditions, and liquidity rebalancing between strategies based on performance.
+      </p>
+
+      <h4>How profit is generated</h4>
+      <p>
+        Returns are calculated daily according to the selected plan rate. The daily return is credited to the investment balance (locked amount) as
+        a daily accrual. At the end of the term, the full locked principal plus the accumulated profit is released back to your balance.
+      </p>
+
+      <h4>Why funds are locked for 30 days</h4>
+      <p>
+        The lock is essential to operational stability. It prevents sudden capital exits during active operation, supports strategies that require a
+        defined time window, and improves liquidity planning to reduce operational risk.
+      </p>
+
+      <details>
+        <summary>How are daily returns calculated?</summary>
+        <p>
+          Returns are calculated once per day using the platform’s daily cycle reference and are reflected in your investment progress. When the
+          plan ends, the final total is released to your available balance.
+        </p>
+      </details>
+
+      <details>
+        <summary>Why do return rates differ between plans?</summary>
+        <p>
+          Larger investment ranges can support broader diversification, tighter execution, and improved operational efficiency. This is why higher
+          tiers can offer higher target ranges or a fixed profile depending on the plan rules.
+        </p>
+      </details>
+
+      <details>
+        <summary>Simple example</summary>
+        <p>
+          If you invest 1000 USDT on a plan with a 2% daily return, the daily profit is 20 USDT. Over 30 days, that is 600 USDT in profit, and the
+          total released at the end is 1600 USDT (principal + profit).
+        </p>
+      </details>
+    </section>
+
+    <footer>
+      Funds are locked for the full plan duration. Daily profit calculations follow the plan rules and are applied once per day using the platform’s
+      daily cycle reference. Connect the “Start” buttons to your deposit and investment confirmation flow.
+    </footer>
+  </main>
+
+  <!-- Scripts -->
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="session.js"></script>
+  <script src="packages.api.js"></script>
+
+</body>
+</html>
