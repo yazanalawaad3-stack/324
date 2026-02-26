@@ -637,7 +637,7 @@
     <!-- List of 7 membership levels -->
     <section class="level-list">
       <!-- GPU 3 cores -->
-      <div class="level-card" id="cardV1">
+      <div class="level-card" id="cardV1" data-level="v1">
         <header>
           <div class="label">GPU 3 cores</div>
           <div class="status locked">Locked</div>
@@ -652,7 +652,7 @@
         <p class="note">Activate to start earning daily income.</p>
       </div>
       <!-- GPU 5 cores -->
-      <div class="level-card" id="cardV2">
+      <div class="level-card" id="cardV2" data-level="v2">
         <header>
           <div class="label">GPU 5 cores</div>
           <div class="status locked">Locked</div>
@@ -667,10 +667,10 @@
         <p class="note">Activate to start earning daily income.</p>
       </div>
       <!-- GPU 10 cores-->
-      <div class="level-card" id="cardV1" data-level="V1">
+      <div class="level-card" id="cardV3" data-level="v3">
         <header>
           <div class="label">GPU 10 cores</div>
-          <div class="status locked" id="statusV1">Locked</div>
+          <div class="status locked" id="statusV3">Locked</div>
         </header>
         <div class="details">
           <div>Level: V3</div>
@@ -813,8 +813,6 @@
       if (anim) anim.setSpeed(0.9);
     })();
   </script>
-  <script src="app.js"></script>
-
 <!-- Modal: V1/V2 session -->
   <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"></div>
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">

@@ -10,14 +10,11 @@
   const earnedEl = document.getElementById("mEarned");
   const runsLeftEl = document.getElementById("runsLeft");
   const totalRunsEl = document.getElementById("totalRuns");
-  const pctEl = document.getElementById("mPercent");
   const perClickEl = document.getElementById("mPerClick");
   const balEl = document.getElementById("mBalance");
   const totalProfitEl = document.getElementById("mTotalProfit");
 
   // status badges on cards
-  const statusV1 = document.getElementById("statusV1");
-  const statusV2 = document.getElementById("statusV2");
 
   // unlock modal
   const unlockModal = document.getElementById("unlockModal");
@@ -43,29 +40,29 @@
     el.classList.toggle("unlocked", !!unlocked);
   }
 
-  function setBadgesForLevel(rank) {
-    // try explicit ids
-    setBadge(statusV1, rank >= 1);
-    setBadge(statusV2, rank >= 2);
+    function setBadgesForLevel(rank) {
+    // Update V1 / V2 cards explicitly (these are guaranteed)
+    const card1 = document.getElementById('cardV1');
+    const card2 = document.getElementById('cardV2');
+    if (card1) setBadge(card1.querySelector('.status'), rank >= 1);
+    if (card2) setBadge(card2.querySelector('.status'), rank >= 2);
 
-    // also update any status badge inside cards
-    document.querySelectorAll('.level-card').forEach((card) => {
+    // Update any card that declares data-level="v1..v7"
+    document.querySelectorAll('.level-card[data-level]').forEach((card) => {
       const lvRaw = String(card.getAttribute('data-level') || '').toLowerCase();
-      let need = null;
-      if (lvRaw === 'v1') need = 1;
-      if (lvRaw === 'v2') need = 2;
-      if (need == null) return;
-
+      const need = levelRank(lvRaw);
+      if (!need) return;
       const badge = card.querySelector('.status');
       if (!badge) return;
       setBadge(badge, rank >= need);
     });
+  });
   }
 
   function openUnlockModal(lv) {
     selectedLevel = lv;
     if (sheetTitle) sheetTitle.textContent = lv === "v2" ? "V2" : "V1";
-    if (sheetSub) sheetSub.textContent = "—";
+    if (sheetSub) sheetSub.textContent = lv === "v2" ? "Profit 2.23% • 4 runs / day" : "Profit 1.71% • 3 runs / day";
     if (unlockModal) {
       unlockModal.classList.add("show");
       unlockModal.setAttribute("aria-hidden", "false");
@@ -121,7 +118,6 @@
       const remaining = claimed ? 0 : (clicks || 0);
       if (totalRunsEl) totalRunsEl.textContent = String(clicks || 0);
       if (runsLeftEl) runsLeftEl.textContent = String(remaining);
-      if (pctEl) pctEl.textContent = pct ? pct.toFixed(2) + "%" : "0%";
 
       const bal = Number((res.data && res.data.balance) || 0);
       const profit = bal * (pct / 100);
@@ -132,7 +128,7 @@
       if (balEl) balEl.textContent = bal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 8 });
       if (totalProfitEl) totalProfitEl.textContent = profit.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 8 });
 
-      if (earnedEl) earnedEl.textContent = String((res.data && res.data.todays_activity) || 0);
+      if (earnedEl) earnedEl.textContent = Number((res.data && res.data.todays_activity) || 0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:8});
     } catch (err) {
       sess.toast((err && err.message) || "Load error");
     }
@@ -166,6 +162,12 @@
       }
       openUnlockModal(lv);
     });
+  });
+
+
+  // Coming soon buttons
+  document.querySelectorAll("button[data-action='coming']").forEach((btn) => {
+    btn.addEventListener("click", () => sess.toast("Coming soon"));
   });
 
   // close sheet
