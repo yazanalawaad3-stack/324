@@ -402,7 +402,7 @@
         </div>
 
         <div class="btn-row">
-          <a class="btn" href="#" onclick="return startPlan('P1');">Start Plan 1</a>
+          <a class="btn" href="#" id="start_P1" data-plan="P1">Start Plan 1</a>
           <a class="btn secondary" href="#how">How it works</a>
         </div>
       </article>
@@ -437,7 +437,7 @@
         </div>
 
         <div class="btn-row">
-          <a class="btn" href="#" onclick="return startPlan('P2');">Start Plan 2</a>
+          <a class="btn" href="#" id="start_P2" data-plan="P2">Start Plan 2</a>
           <a class="btn secondary" href="#how">How it works</a>
         </div>
       </article>
@@ -472,7 +472,7 @@
         </div>
 
         <div class="btn-row">
-          <a class="btn" href="#" onclick="return startPlan('P3');">Start Plan 3</a>
+          <a class="btn" href="#" id="start_P3" data-plan="P3">Start Plan 3</a>
           <a class="btn secondary" href="#how">How it works</a>
         </div>
       </article>
@@ -555,11 +555,16 @@
     </footer>
   </main>
 
-  <!-- Scripts -->
-  <script src="supabase-config.js"></script>
-  <script src="supabase-client.js"></script>
-  <script src="session.js"></script>
-  <script src="packages.api.js"></script>
+  
+
+
+
+  <!-- Supabase + app wiring (no UI changes) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
+  <script src="./supabase-client.js"></script>
+  <script src="./session.js"></script>
+  <script src="./packages.api.js"></script>
 
 </body>
 </html>

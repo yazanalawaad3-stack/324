@@ -1,168 +1,168 @@
 (function () {
   "use strict";
 
-  function getUserId() {
-    if (typeof window.requireAuth === "function") {
-      try {
-        return window.requireAuth();
-      } catch (e) {
-        return null;
-      }
+  function fmt(n) {
+    const v = Number(n || 0);
+    return v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " USDT";
+  }
+
+  function getSb() {
+    // Prefer the project-wide client created in supabase-client.js
+    if (window.LUX && window.LUX.sb) return window.LUX.sb;
+
+    // Fallback: if supabase UMD is present and config exists, create it here
+    if (window.supabase && window.LUX_SUPABASE_URL && window.LUX_SUPABASE_ANON_KEY) {
+      window.LUX = window.LUX || {};
+      window.LUX.sb = window.supabase.createClient(window.LUX_SUPABASE_URL, window.LUX_SUPABASE_ANON_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      });
+      return window.LUX.sb;
     }
-    return localStorage.getItem("lux_user_id");
+    return null;
   }
 
-  function fmt(n, currency) {
-    const v = Number.isFinite(n) ? n : 0;
-    return v.toFixed(2) + " " + (currency || "USDT");
+  async function loadPackages(sb) {
+    const { data, error } = await sb
+      .from("investment_packages")
+      .select("code,min_amount,max_amount,duration_days,daily_rate,is_active,sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (error) throw error;
+
+    const map = {};
+    (data || []).forEach((p) => {
+      map[String(p.code).toUpperCase()] = p;
+    });
+    return map;
   }
 
-  const state = {
-    userId: null,
-    currency: "USDT",
-    account: { available: 0, locked: 0 },
-    plans: {
-      P1: { days: 30, dailyRate: 0.02 },
-      P2: { days: 30, dailyRate: 0.02 },
-      P3: { days: 30, dailyRate: 0.02 }
-    }
-  };
+  async function loadWallet(sb, userId) {
+    const { data, error } = await sb
+      .from("wallet_accounts")
+      .select("balance,locked")
+      .eq("user_id", userId)
+      .maybeSingle();
 
-  function readPlanLimits(planKey) {
-    const input = document.getElementById("amount_" + planKey);
-    const min = Number(input?.getAttribute("min") || 0);
-    const max = Number(input?.getAttribute("max") || 0);
-    return { min, max };
+    if (error) throw error;
+
+    return {
+      available: Number(data?.balance || 0),
+      locked: Number(data?.locked || 0),
+    };
   }
 
-  function setAccountUI() {
-    const a = document.getElementById("availableView");
-    const l = document.getElementById("lockedView");
-    if (a) a.textContent = fmt(state.account.available, state.currency);
-    if (l) l.textContent = fmt(state.account.locked, state.currency);
+  function setAccountUI(account) {
+    const av = document.getElementById("availableView");
+    const lk = document.getElementById("lockedView");
+    if (av) av.textContent = fmt(account.available);
+    if (lk) lk.textContent = fmt(account.locked);
   }
 
-  function calc(planKey, raw) {
-    const p = state.plans[planKey];
-    const amount = Number(raw || 0);
-    const daily = amount * p.dailyRate;
-    const total = daily * p.days;
-    const maturity = amount + total;
-    return { amount, daily, total, maturity };
+  function validateAmount(pkg, amount) {
+    if (!pkg) return false;
+    const a = Number(amount || 0);
+    if (!Number.isFinite(a) || a <= 0) return false;
+    return a >= Number(pkg.min_amount) && a <= Number(pkg.max_amount);
   }
 
-  function validate(planKey, amount) {
-    const lim = readPlanLimits(planKey);
-    return amount >= lim.min && amount <= lim.max;
-  }
-
-  function updateUI(planKey) {
+  function updateEstimates(pkg, planKey) {
     const input = document.getElementById("amount_" + planKey);
     const err = document.getElementById("error_" + planKey);
     const dailyEl = document.getElementById("daily_" + planKey);
     const totalEl = document.getElementById("total_" + planKey);
     const maturityEl = document.getElementById("maturity_" + planKey);
 
-    if (!input) return;
+    const amount = Number(input?.value || 0);
 
-    const { amount, daily, total, maturity } = calc(planKey, input.value);
-    if (dailyEl) dailyEl.textContent = fmt(daily, state.currency);
-    if (totalEl) totalEl.textContent = fmt(total, state.currency);
-    if (maturityEl) maturityEl.textContent = fmt(maturity, state.currency);
+    // Unified 2% rate (backend also uses 2% default)
+    const rate = Number(pkg?.daily_rate ?? 0.02);
+    const days = Number(pkg?.duration_days ?? 30);
 
-    if (!input.value) {
+    const daily = amount > 0 ? amount * rate : 0;
+    const total = daily * days;
+    const maturity = amount + total;
+
+    if (dailyEl) dailyEl.textContent = fmt(daily);
+    if (totalEl) totalEl.textContent = fmt(total);
+    if (maturityEl) maturityEl.textContent = fmt(maturity);
+
+    if (!input?.value) {
       if (err) err.style.display = "none";
       return;
     }
-    if (err) err.style.display = validate(planKey, amount) ? "none" : "block";
+    if (err) err.style.display = validateAmount(pkg, amount) ? "none" : "block";
   }
 
-  async function loadAccount() {
-    if (!window.supabase) throw new Error("Supabase client not found");
-    const { data, error } = await window.supabase
-      .from("wallet_accounts")
-      .select("balance,locked,currency")
-      .eq("user_id", state.userId)
-      .maybeSingle();
-
-    if (error) throw error;
-    if (!data) {
-      state.account.available = 0;
-      state.account.locked = 0;
-      state.currency = "USDT";
-    } else {
-      state.account.available = Number(data.balance || 0);
-      state.account.locked = Number(data.locked || 0);
-      state.currency = data.currency || "USDT";
-    }
-    setAccountUI();
-  }
-
-  async function startPlanInternal(planKey) {
+  async function startPlan(sb, userId, packages, account, planKey) {
+    const pkg = packages[planKey];
     const input = document.getElementById("amount_" + planKey);
     const amount = Number(input?.value || 0);
 
-    if (!validate(planKey, amount)) {
-      alert("Invalid amount. Please check the plan limits.");
-      return false;
+    if (!validateAmount(pkg, amount)) {
+      window.LUX?.session?.toast?.("Invalid amount for this plan.");
+      return;
     }
-    if (amount > state.account.available) {
-      alert("Insufficient available balance.");
-      return false;
-    }
-
-    const { data, error } = await window.supabase.rpc("app_start_investment", {
-      p_user: state.userId,
-      p_package_code: planKey,
-      p_amount: amount
-    });
-
-    if (error) {
-      alert(error.message || "Failed to start plan");
-      return false;
-    }
-
-    if (input) input.value = "";
-    updateUI(planKey);
-    await loadAccount();
-
-    alert("Plan started successfully.");
-    return false;
-  }
-
-  window.startPlan = function (planKey) {
-    startPlanInternal(planKey).catch((e) => {
-      console.error(e);
-      alert(e.message || "Unexpected error");
-    });
-    return false;
-  };
-
-  function init() {
-    state.userId = getUserId();
-    if (!state.userId) {
-      alert("Please login first.");
-      window.location.href = "login.html";
+    if (amount > account.available) {
+      window.LUX?.session?.toast?.("Insufficient available balance.");
       return;
     }
 
-    setAccountUI();
-
-    ["P1", "P2", "P3"].forEach((k) => {
-      const input = document.getElementById("amount_" + k);
-      if (input) input.addEventListener("input", () => updateUI(k));
-      updateUI(k);
+    const { data, error } = await sb.rpc("app_start_investment", {
+      p_user: userId,
+      p_package_code: planKey,
+      p_amount: amount,
     });
 
-    loadAccount().catch((e) => {
+    if (error) {
+      window.LUX?.session?.toast?.(error.message || "Failed to start plan.");
+      return;
+    }
+
+    // Refresh wallet after lock
+    const w = await loadWallet(sb, userId);
+    account.available = w.available;
+    account.locked = w.locked;
+    setAccountUI(account);
+
+    if (input) input.value = "";
+    updateEstimates(pkg, planKey);
+
+    window.LUX?.session?.toast?.("Plan started successfully.");
+    return data;
+  }
+
+  document.addEventListener("DOMContentLoaded", async function () {
+    const sb = getSb();
+    if (!sb) {
+      alert("Supabase client not found");
+      return;
+    }
+
+    const userId = window.LUX?.session?.requireAuth?.("./login.html") || "";
+    if (!userId) return;
+
+    try {
+      const packages = await loadPackages(sb);
+      const account = await loadWallet(sb, userId);
+      setAccountUI(account);
+
+      ["P1", "P2", "P3"].forEach((k) => {
+        const input = document.getElementById("amount_" + k);
+        if (input) input.addEventListener("input", () => updateEstimates(packages[k], k));
+        updateEstimates(packages[k], k);
+
+        const btn = document.getElementById("start_" + k);
+        if (btn) {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            startPlan(sb, userId, packages, account, k);
+          });
+        }
+      });
+    } catch (e) {
       console.error(e);
-      alert(e.message || "Failed to load account");
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+      alert(e?.message || "Failed to load packages.");
+    }
+  });
 })();
