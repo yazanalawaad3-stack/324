@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register</title>
+  <!-- International telephone input styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" />
+  <style>
+    :root {
+      /* Variables drawn from the existing site for cohesion */
+      --bg: #06070b;
+      --bg2: #090b12;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.09);
+      --line: rgba(255,255,255,.12);
+      --text: #f4f6ff;
+      --muted: rgba(244,246,255,.72);
+      --muted2: rgba(244,246,255,.55);
+      --glow: rgba(140, 84, 255,.32);
+      --glow2: rgba(0, 209, 255,.22);
+      --good: #2ee59d;
+      --bad: #ff5d7b;
+      --radius: 18px;
+      --radius2: 24px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% -10%, var(--glow), transparent 60%),
+        radial-gradient(900px 600px at 90% 0%, var(--glow2), transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 0 14px;
+      background: rgba(255,255,255,.04);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+    header .back-btn {
+      position: absolute;
+      left: 14px;
+      color: var(--glow);
+      font-size: 20px;
+      text-decoration: none;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      padding: 26px 20px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow:
+        0 14px 50px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.10);
+      position: relative;
+    }
+    /* glowing overlays matching site cards */
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(800px 220px at 10% 0%, var(--glow), transparent 60%),
+        radial-gradient(700px 220px at 90% 10%, var(--glow2), transparent 65%);
+      filter: blur(0px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    label {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 4px;
+      /* Force labels onto their own line for consistent alignment */
+      display: block;
+    }
+
+    /* Wrapper for password inputs with toggle */
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 44px; /* space for toggle icon */
+    }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+    }
+    .toggle-password svg {
+      fill: var(--muted2);
+      width: 20px;
+      height: 20px;
+    }
+    input[type="text"],
+    input[type="tel"],
+    input[type="password"] {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      /* Uniform height for better alignment */
+      height: 48px;
+    }
+    /* Style for the international phone input plugin */
+    .iti {
+      width: 100%;
+    }
+    .iti input {
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      color: var(--text);
+      padding-left: 54px; /* space for flag */
+      height: 48px;
+    }
+    .iti--allow-dropdown .iti__flag-container {
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px 0 0 14px;
+    }
+    .iti__country-list {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .iti__country:hover, .iti__country.iti__active {
+      background: var(--card);
+    }
+    input::placeholder {
+      color: var(--muted2);
+    }
+    .captcha {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .captcha input {
+      flex: 1;
+    }
+    .captcha-image {
+      width: 96px;
+      /* Match height of other inputs for uniform alignment */
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--text);
+      user-select: none;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    button[type="submit"] {
+      margin-top: 8px;
+      padding: 14px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--good), var(--glow));
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      transition: transform .12s ease, filter .12s ease;
+    }
+    button[type="submit"]:active {
+      transform: scale(.98);
+      filter: brightness(1.05);
+    }
+
+    /* Disabled submit button appearance */
+    button[type="submit"]:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* Agreement checkbox and text */
+    .agree-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: var(--muted2);
+    }
+    .agree-container a {
+      color: var(--glow);
+      text-decoration: none;
+    }
+
+    /* Helper text for switching pages */
+    .helper {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: var(--muted2);
+      text-align: center;
+    }
+    .helper a {
+      color: var(--glow);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Footer links at bottom of page */
+    .footer-links {
+      font-size: 0.75rem;
+      color: var(--muted2);
+      text-align: center;
+      padding: 16px;
+    }
+    .footer-links a {
+      color: var(--glow);
+      text-decoration: none;
+      margin: 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="back-btn">&#x2190;</a>
+    Register
+  </header>
+  <main>
+    <div class="card">
+      <h1>Create Account</h1>
+      <form action="#" method="post">
+        <div>
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" name="password" placeholder="Enter password" required />
+            <span class="toggle-password" data-target="password">
+              <!-- Eye icon (show/hide) -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12c-3.33 0-6.21-2.05-7.54-5 1.33-2.95 4.21-5 7.54-5 3.33 0 6.21 2.05 7.54 5-1.33 2.95-4.21 5-7.54 5z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="confirm">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="confirm" name="confirm" placeholder="Re-enter password" required />
+            <span class="toggle-password" data-target="confirm">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5c-5 0-9.27 3.11-11 7.5 1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 8.11 17 5 12 5zm0 12c-3.33 0-6.21-2.05-7.54-5 1.33-2.95 4.21-5 7.54-5 3.33 0 6.21 2.05 7.54 5-1.33 2.95-4.21 5-7.54 5z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
+          </div>
+        </div>
+        <div>
+          <label for="invite">Invite Code</label>
+          <input type="text" id="invite" name="invite" placeholder="Enter invite code" />
+        </div>
+        <div>
+          <label for="captcha">Captcha</label>
+          <div class="captcha">
+            <input type="text" id="captcha" name="captcha" placeholder="Enter code" required />
+            <div id="captchaImage" class="captcha-image" title="Click to refresh"></div>
+          </div>
+        </div>
+        <div class="agree-container">
+          <input type="checkbox" id="agree" />
+          <span>I agree to <a href="#">Privacy Policy</a> &amp; <a href="#">Terms of Use</a></span>
+        </div>
+        <button type="submit" id="submitBtn" disabled>Register</button>
+      </form>
+      <div class="helper">
+        Already have an account?
+        <a href="login.html">Login</a>
+      </div>
+    </div>
+  </main>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script type="module" src="./register.js?v=1"></script>
+</body>
+</html>
