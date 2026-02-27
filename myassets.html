@@ -19,61 +19,83 @@
   <!-- Crypto icon font (BNB / TRX / ETH) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cryptocoins/2.9.0/webfont/cryptocoins.css" rel="stylesheet" />
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
   <link rel="stylesheet" href="./styles.css" />
 
-
   <style>
-    /* Quick action buttons (Wallet / Transfer / Network / Analytics) icon upgrade */
-    .lux-quick .lux-quick-ico{
-      width: 40px;
-      height: 40px;
+    /* Settings menu upgrade (style only) */
+    .lux-menu{
+      width: 320px;
+      max-width: calc(100vw - 24px);
+      border-radius: 18px;
+      background: rgba(10,14,30,.55);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 20px 60px rgba(0,0,0,.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .lux-menu-item{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: transparent;
+      border: 0;
+      color: rgba(255,255,255,.88);
+      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+      border-radius: 14px;
+      margin: 6px 8px;
+    }
+
+    .lux-menu-item:hover{
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
+    }
+
+    .lux-menu-item:active{
+      transform: translateY(0px) scale(.99);
+    }
+
+    .lux-menu-ic{
+      width: 38px;
+      height: 38px;
       border-radius: 14px;
       display: grid;
       place-items: center;
-      position: relative;
-      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.06);
-      box-shadow: 0 10px 26px rgba(0,0,0,.25);
-    }
-    .lux-quick .lux-quick-ico svg{
-      width: 20px;
-      height: 20px;
-      stroke-width: 2.2;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.04);
+      flex: 0 0 38px;
     }
 
-    /* Per-button accent colors (matches the premium "network chip" vibe) */
-    #walletBtn .lux-quick-ico{
-      border-color: rgba(255,211,110,.22);
-      background: linear-gradient(135deg, rgba(255,211,110,.14), rgba(255,255,255,.06));
-      box-shadow: 0 0 0 1px rgba(255,211,110,.12), 0 16px 34px rgba(255,211,110,.10);
+    .lux-menu-ic i{
+      font-size: 16px;
+      opacity: .95;
     }
-    #walletBtn .lux-quick-ico svg{ stroke: #FFD36E; }
 
-    .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico{
-      border-color: rgba(124,240,199,.22);
-      background: linear-gradient(135deg, rgba(124,240,199,.14), rgba(255,255,255,.06));
-      box-shadow: 0 0 0 1px rgba(124,240,199,.12), 0 16px 34px rgba(124,240,199,.10);
+    .lux-menu-tx{
+      font-weight: 600;
+      letter-spacing: .2px;
     }
-    .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico svg{ stroke: #7CF0C7; }
 
-    #quickNetworkBtn .lux-quick-ico{
-      border-color: rgba(143,181,255,.22);
-      background: linear-gradient(135deg, rgba(143,181,255,.14), rgba(255,255,255,.06));
-      box-shadow: 0 0 0 1px rgba(143,181,255,.12), 0 16px 34px rgba(143,181,255,.10);
+    .lux-menu-divider{
+      height: 1px;
+      margin: 10px 14px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
     }
-    #quickNetworkBtn .lux-quick-ico svg{ stroke: #8FB5FF; }
 
-    #analyticsBtn .lux-quick-ico{
-      border-color: rgba(208,139,255,.22);
-      background: linear-gradient(135deg, rgba(208,139,255,.14), rgba(255,255,255,.06));
-      box-shadow: 0 0 0 1px rgba(208,139,255,.12), 0 16px 34px rgba(208,139,255,.10);
-    }
-    #analyticsBtn .lux-quick-ico svg{ stroke: #D08BFF; }
+    /* Per-item accent colors */
+    .lux-menu-item[data-action="member"] .lux-menu-ic i{ color:#FFD36E; }
+    .lux-menu-item[data-action="rewards"] .lux-menu-ic i{ color:#7CF0C7; }
+    .lux-menu-item[data-action="luckydraw"] .lux-menu-ic i{ color:#FF8BD6; }
+    .lux-menu-item[data-action="security"] .lux-menu-ic i{ color:#8FB5FF; }
+    .lux-menu-item[data-action="language"] .lux-menu-ic i{ color:#D08BFF; }
 
-    .lux-quick:active{ transform: translateY(0px) scale(.99); }
+    .lux-menu-item[data-action="about"] .lux-menu-ic i{ color:#FFD36E; }
+    .lux-menu-item[data-action="guide"] .lux-menu-ic i{ color:#7CF0C7; }
+    .lux-menu-item[data-action="getapp"] .lux-menu-ic i{ color:#8FB5FF; }
   </style>
 
 </head>
@@ -112,7 +134,7 @@
         <span class="lux-menu-tx">Rewards</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="luckydraw" role="menuitem" onclick="window.location.href='./Luckydraw.html'">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-life-ring"></i></span>
+        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-gift"></i></span>
         <span class="lux-menu-tx">Lucky Draw</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="security" role="menuitem">
@@ -133,7 +155,7 @@
         <span class="lux-menu-tx">Platform Guide</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="getapp" role="menuitem">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-download"></i></span>
+        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-mobile-screen-button"></i></span>
         <span class="lux-menu-tx">Get the App</span>
       </button>
     </div>
@@ -207,22 +229,22 @@
           <div class="lux-quick-wrap" aria-label="Quick actions">
             <div class="lux-quick-row">
             <button class="lux-quick" id="walletBtn" type="button">
-              <span class="lux-quick-ico"><i data-lucide="wallet" aria-hidden="true"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-wallet"></i></span>
               <span class="lux-quick-label">Wallet</span>
             </button>
 
             <button class="lux-quick" type="button">
-              <span class="lux-quick-ico"><i data-lucide="send" aria-hidden="true"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-hand-holding"></i></span>
               <span class="lux-quick-label">Transfer</span>
             </button>
 
             <button class="lux-quick" id="quickNetworkBtn" type="button" aria-label="Network">
-              <span class="lux-quick-ico"><i data-lucide="users" aria-hidden="true"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-users"></i></span>
               <span class="lux-quick-label">Network</span>
             </button>
 
             <button class="lux-quick" id="analyticsBtn" type="button">
-              <span class="lux-quick-ico"><i data-lucide="file-text" aria-hidden="true"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-chart-column"></i></span>
               <span class="lux-quick-label">Analytics</span>
             </button>
             </div>
@@ -340,14 +362,5 @@
 <script src="./supabase-client.js"></script>
 <script src="./session.js"></script>
 <script src="./myassets.api.js"></script>
-
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    if (window.lucide && typeof window.lucide.createIcons === 'function') {
-      window.lucide.createIcons();
-    }
-  });
-</script>
-
 </body>
 </html>
