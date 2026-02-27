@@ -6,8 +6,32 @@
   const uid = sess.requireAuth("./login.html");
   if (!uid) return;
 
+
+  function setStatsLoading(isLoading) {
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+
+    if (isLoading) {
+      set("demoBalance", "—");
+      set("todayIncome", "$—");
+      set("totalIncome", "$—");
+      set("teamIncome", "$—");
+      set("teamTotalIncome", "$—");
+      const box = document.querySelector(".lux-balance-box");
+      if (box) box.setAttribute("aria-busy", "true");
+    } else {
+      const box = document.querySelector(".lux-balance-box");
+      if (box) box.removeAttribute("aria-busy");
+    }
+  }
+
+  setStatsLoading(true);
+
   async function load() {
     try {
+      setStatsLoading(true);
       const res = await sb
         .from("v_user_activity")
         .select(
@@ -45,10 +69,11 @@
       localStorage.setItem("lux_network_id7", String(data.network_id7 || ""));
       localStorage.setItem("lux_level", String(data.level || ""));
       localStorage.setItem("lux_status", String(data.status || ""));
+      setStatsLoading(false);
     } catch (err) {
       sess.toast((err && err.message) || "Load error");
     }
   }
 
-  window.addEventListener("load", load);
+  document.addEventListener("DOMContentLoaded", load);
 })();
