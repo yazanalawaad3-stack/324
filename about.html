@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>About Platform</title>
+  <style>
+:root{
+  --bg:#0b0d10;
+  --panel:#121822;
+  --panel2:#0f141d;
+  --text:#e9eef6;
+  --muted:#9aa6b2;
+  --line:rgba(255,255,255,.08);
+  --brand:#3b82f6;
+  --brand2:#22c55e;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(59,130,246,.18), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(34,197,94,.10), transparent 60%),
+    var(--bg);
+  color:var(--text);
+}
+
+a{color:inherit; text-decoration:none}
+.lux-body{min-height:100%}
+.lux-app{min-height:100%; display:flex; flex-direction:column; padding-bottom:18px}
+.lux-head{
+  position:sticky; top:0; z-index:10;
+  background: linear-gradient(180deg, rgba(11,13,16,.92), rgba(11,13,16,.70));
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
+}
+.lux-head-tight{padding:12px 14px}
+.lux-back{
+  width:40px; height:40px; border-radius:14px;
+  display:grid; place-items:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+}
+.lux-back:active{transform:scale(.98)}
+.lux-head-title{display:flex; flex-direction:column; gap:2px}
+.lux-h1{font-weight:700; font-size:18px; letter-spacing:.2px}
+.lux-h2{font-size:13px; color:var(--muted)}
+.lux-main{flex:1; padding:14px 0 0}
+
+/* Bootstrap-like utilities used in your markup */
+.container{width:min(980px, 100%); margin:0 auto}
+.px-3{padding-left:14px; padding-right:14px}
+
+/* Cards */
+.lux-card{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding:16px;
+}
+.lux-card-wide{padding:18px}
+.lux-card-top{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.lux-card-title{font-weight:700; font-size:16px}
+.lux-badge{
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(59,130,246,.16);
+  border:1px solid rgba(59,130,246,.35);
+}
+.lux-card-desc{margin-top:10px; color:var(--muted); font-size:14px; line-height:1.55}
+.lux-divider{height:1px; background:var(--line); width:100%}
+.lux-section{margin-top:14px}
+.lux-section-title{display:flex; align-items:center; gap:10px; font-weight:700; margin-bottom:8px}
+.lux-note-list{margin:0; padding-left:18px; color:var(--muted)}
+.lux-note-list li{margin:6px 0; line-height:1.45}
+
+/* Buttons */
+.lux-actions{display:flex; flex-wrap:wrap; gap:10px}
+.lux-btn{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+}
+.lux-btn:hover{background:rgba(255,255,255,.06)}
+.lux-btn:active{transform:scale(.99)}
+
+/* Icons */
+.lux-icon{display:inline-flex; align-items:center; justify-content:center}
+.lux-icon--spaced{margin-right:8px}
+.lux-svg{width:18px; height:18px; display:block}
+
+/* Toast (kept, but no JS) */
+.lux-toast{
+  position:fixed;
+  left:50%;
+  bottom:92px;
+  transform:translateX(-50%);
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(17,21,27,.92);
+  color:var(--text);
+  box-shadow: var(--shadow);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+}
+.lux-toast.show{opacity:1; transform:translateX(-50%) translateY(-4px)}
+
+/* Small screens */
+@media (max-width:420px){
+  .lux-h1{font-size:17px}
+  .lux-card-wide{padding:16px}
+}
+</style>
+</head>
+<body class="lux-body lux-solid-bg lux-about-page">
+<div class="lux-app lux-page lux-app--page">
+
+    <!-- Header -->
+    <header class="lux-head lux-head-tight" aria-label="About Platform header">
+      <a class="lux-back" href="./myassets.html" aria-label="Back">
+        <span class="lux-icon"><svg class="lux-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+
+      <div class="lux-head-title">
+        <div class="lux-h1">About Platform</div>
+        <div class="lux-h2">Placeholder content (edit later)</div>
+      </div>
+    </header>
+
+    <main class="lux-main">
+      <div class="container px-3">
+
+        <section class="lux-card lux-card-wide" aria-label="About content">
+          <div class="lux-card-top">
+            <div class="lux-card-title">What is this platform?</div>
+</div>
+          <div class="lux-card-desc">
+            Write anything here. This is placeholder text so the design stays consistent across pages.
+            You can replace this later with your real About content.
+          </div>
+
+          <div class="lux-divider" style="margin: 14px 0;"></div>
+
+          <div class="lux-section">
+            <div class="lux-section-title"><span class="lux-icon lux-icon--spaced"><svg class="lux-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h7l-1 8 12-14h-7l-1-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>Key Features</div>
+            <ul class="lux-note-list" style="margin: 0; padding-left: 18px;">
+              <li>Feature one (placeholder)</li>
+              <li>Feature two (placeholder)</li>
+              <li>Feature three (placeholder)</li>
+            </ul>
+          </div>
+
+          <div class="lux-divider" style="margin: 14px 0;"></div>
+
+          <div class="lux-section">
+            <div class="lux-section-title"><span class="lux-icon lux-icon--spaced"><svg class="lux-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 4v6c0 5-3.5 9.4-8 10-4.5-.6-8-5-8-10V6l8-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>Security</div>
+            <div class="lux-card-desc">
+              Add your security notes here (placeholder). Keep this section short and mobile friendly.
+            </div>
+          </div>
+
+          <div class="lux-divider" style="margin: 14px 0;"></div>
+</section>
+
+        <div style="height: 18px;"></div>
+      </div>
+    </main>
+
+    <!-- Toast (kept for consistency) -->
+    <div class="lux-toast" id="luxToast" role="status" aria-live="polite" aria-atomic="true">
+      <span id="toastText">Done</span>
+    </div>
+  </div>
+
+  
+</body>
+</html>
