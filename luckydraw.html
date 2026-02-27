@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lucky Draw</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root{
+      --bg:#05070b;
+      --panel:#0f1720;
+      --panel2:#0b1118;
+      --line:rgba(255,255,255,.08);
+      --muted:rgba(255,255,255,.68);
+      --text:rgba(255,255,255,.92);
+      --gold1:#f6c453;
+      --gold2:#f5e3a4;
+      --ok:#46e6a5;
+      --danger:#ff6b6b;
+      --shadow:0 18px 45px rgba(0,0,0,.55);
+      --radius:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(246,196,83,.10), transparent 55%),
+        radial-gradient(700px 420px at 95% 12%, rgba(130,170,255,.10), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:sticky;
+      top:0;
+      z-index:50;
+      height:50px;
+      padding:0 14px;
+      background:rgba(5,7,11,.55);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(10px);
+      font-weight:750;
+      letter-spacing:.3px;
+    }
+    header .back-btn{
+      position:absolute;
+      left:14px;
+      color:var(--gold1);
+      font-size:20px;
+      text-decoration:none;
+      width:40px;height:40px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:12px;
+    }
+    header .back-btn:active{transform:scale(.98);}
+
+    main{
+      width:min(980px,100%);
+      margin:0 auto;
+      padding:16px 12px calc(30px + 40px);
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .panel{
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(16,27,32,.62);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .grid-wrap{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .prize-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;
+    }
+
+    .tile{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(120px 70px at 20% 20%, rgba(246,196,83,.18), transparent 60%),
+        radial-gradient(120px 70px at 85% 15%, rgba(96,165,250,.16), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      padding:12px 10px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:92px;
+      cursor:pointer;
+      transition:transform .12s ease, filter .12s ease, border-color .12s ease;
+      box-shadow: 0 14px 34px rgba(0,0,0,.35);
+      text-align:center;
+      color:var(--text);
+      user-select:none;
+    }
+    .tile:hover{filter:brightness(1.05); border-color:rgba(246,196,83,.28);}
+    .tile:active{transform:scale(.99);}
+
+    .icon{
+      width:46px;height:46px;
+      border-radius:16px;
+      background:rgba(0,0,0,.28);
+      border:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      color:rgba(255,255,255,.90);
+    }
+    .label{
+      font-weight:900;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+
+    .start-btn{
+      width:100%;
+      border:none;
+      border-radius:999px;
+      padding:12px 16px;
+      min-height:48px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:900;
+      color:rgba(0,0,0,.92);
+      background:linear-gradient(90deg, var(--gold1), var(--gold2));
+      transition:transform .12s ease, filter .12s ease;
+      box-shadow: 0 18px 45px rgba(0,0,0,.45);
+    }
+    .start-btn:active{transform:scale(.99); filter:brightness(1.03);}
+
+    .remaining{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-size:13px;
+      color:var(--muted);
+      margin-top:8px;
+      flex-wrap:wrap;
+    }
+    .remaining .num{
+      color:var(--ok);
+      font-weight:950;
+    }
+
+    .rules{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .rules h3{
+      font-size:1.05rem;
+      font-weight:850;
+      text-align:center;
+    }
+    .rules ol{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.6;
+    }
+    .rules li{margin:6px 0;}
+
+    /* Modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      z-index:100;
+    }
+    .modal.show{display:flex;}
+    .modal .overlay{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.62);
+    }
+    .modal .card{
+      position:relative;
+      width:min(520px, 100%);
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(16,27,32,.84);
+      box-shadow:var(--shadow);
+      padding:16px;
+      backdrop-filter:blur(10px);
+    }
+    .modal .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .modal .title{
+      font-size:1.05rem;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .modal .sub{
+      margin-top:4px;
+      font-size:.85rem;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .modal .x{
+      width:40px;height:40px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.28);
+      color:var(--text);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .modal .x:active{transform:scale(.98);}
+
+    .modal .box{
+      margin-top:12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.28);
+      padding:14px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .modal .box .bicon{
+      width:46px;height:46px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:rgba(255,255,255,.92);
+    }
+    .modal .box .prize{
+      font-weight:950;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .modal .box .note{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .modal .actions{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      flex:1 1 160px;
+      border-radius:999px;
+      min-height:44px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.28);
+      color:var(--muted);
+      font-weight:850;
+      cursor:pointer;
+      padding:10px 14px;
+      transition:transform .12s ease, filter .12s ease;
+    }
+    .btn:active{transform:scale(.99);}
+
+    .btn.primary{
+      border:none;
+      color:rgba(0,0,0,.92);
+      background:linear-gradient(90deg, var(--gold1), var(--gold2));
+    }
+
+    .tip{
+      margin-top:10px;
+      font-size:12px;
+      color:rgba(255,255,255,.45);
+      line-height:1.5;
+    }
+
+    @media (max-width: 420px){
+      .prize-grid{gap:8px;}
+      .tile{min-height:84px; padding:10px 8px;}
+      .label{font-size:13px;}
+      header{font-size:.95rem}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="back-btn" href="myassets.html" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></a>
+    Lucky Draw
+  </header>
+
+  <main>
+    <section class="panel" aria-label="Prize grid">
+      <div class="grid-wrap">
+        <div class="prize-grid">
+          <button class="tile" type="button" data-prize="95 USDT">
+            <div class="icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="label">95 USDT</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="5 USDT">
+            <div class="icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="label">5 USDT</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="iPhone 17">
+            <div class="icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <div class="label">iPhone 17</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="9 USDT">
+            <div class="icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="label">9 USDT</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="Audi A6">
+            <div class="icon"><i class="fa-solid fa-car"></i></div>
+            <div class="label">Audi A6</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="15 USDT">
+            <div class="icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="label">15 USDT</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="iPad">
+            <div class="icon"><i class="fa-solid fa-tablet-screen-button"></i></div>
+            <div class="label">iPad</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="25 USDT">
+            <div class="icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="label">25 USDT</div>
+          </button>
+
+          <button class="tile" type="button" data-prize="55 USDT">
+            <div class="icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="label">55 USDT</div>
+          </button>
+        </div>
+
+        <div>
+          <button id="startBtn" class="start-btn" type="button">Start</button>
+          <div class="remaining">
+            <span>Remaining</span>
+            <span id="remaining" class="num">...</span>
+            <span>times</span>
+            <span>lottery opportunities</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel rules" aria-label="Rules">
+      <h3>Participation rules and conditions</h3>
+      <ol>
+        <li>During the event, when subordinates meet the recharge criteria, superiors will automatically receive the qualification for the lucky draw.</li>
+        <li>The lucky draw opportunity is valid on the day and cannot be accumulated to the next day. Please use it promptly as it will be reset after expiration.</li>
+        <li>If you win a physical prize, please take a screenshot and contact the product manager with your account to claim it.</li>
+        <li>The lucky draw is open for a limited time, with more luxurious prizes coming soon. Stay tuned.</li>
+      </ol>
+    </section>
+  </main>
+
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Prize modal">
+    <div class="overlay" data-close="1"></div>
+    <div class="card">
+      <div class="top">
+        <div>
+          <div class="title">Selection</div>
+          <div class="sub">You selected:</div>
+        </div>
+        <button class="x" id="closeModal" type="button" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="box">
+        <div class="bicon"><i class="fa-solid fa-star"></i></div>
+        <div>
+          <div id="modalPrize" class="prize">—</div>
+          <div class="note">UI demo only.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="okBtn" type="button">OK</button>
+        <button class="btn primary" id="spinBtn" type="button">Spin</button>
+      </div>
+
+      <div class="tip">Tip: Tap any prize tile to preview. Start picks a random prize.</div>
+    </div>
+  </div>
+
+
+  <!-- Supabase + session (same as the rest of the site) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="session.js"></script>
+  <script src="lucky.api.js?v=3"></script>
+</body>
+</html>

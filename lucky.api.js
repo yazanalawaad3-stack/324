@@ -78,13 +78,27 @@
     }
 
     // requireAuth from session.js
-    if (typeof window.requireAuth === 'function') {
-      const uid = window.requireAuth();
-      if (!uid) return;
-      state.userId = uid;
-    } else {
-      state.userId = localStorage.getItem('lux_user_id');
+    let uid = null;
+    try {
+      if (typeof window.requireAuth === 'function') {
+        uid = window.requireAuth();
+      }
+    } catch (_) {}
+
+    if (!uid) {
+      uid =
+        localStorage.getItem('lux_user_id') ||
+        localStorage.getItem('user_id') ||
+        localStorage.getItem('uid') ||
+        localStorage.getItem('userId');
     }
+
+    if (!uid) {
+      alert('Not logged in');
+      return;
+    }
+
+    state.userId = uid;
 
     const { data, error } = await client.rpc('app_lucky_get_state', { p_user: state.userId });
     if (error) {
@@ -173,5 +187,6 @@
   document.addEventListener('DOMContentLoaded', async () => {
     bindUI();
     await loadState();
+    setInterval(loadState, 10000);
   });
 })();
