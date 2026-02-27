@@ -165,10 +165,41 @@
   }
 
   if(settingsMenu){
-    settingsMenu.addEventListener('click', (e) => {
+    settingsMenu.addEventListener('click', async (e) => {
       e.stopPropagation();
       const item = e.target.closest('.lux-menu-item');
       if(!item) return;
+
+      async function doLogout(){
+        // Try project session helper first
+        try{
+          const sess = window.LUX && window.LUX.session;
+          if(sess && typeof sess.signOut === 'function'){
+            await sess.signOut();
+            return true;
+          }
+          if(sess && typeof sess.logout === 'function'){
+            await sess.logout();
+            return true;
+          }
+        }catch{}
+
+        // Fallback to Supabase client
+        try{
+          const sb = (window.LUX && window.LUX.sb) || window.supabaseClient || null;
+          if(sb && sb.auth && typeof sb.auth.signOut === 'function'){
+            await sb.auth.signOut();
+            return true;
+          }
+        }catch{}
+
+        // Last-resort: clear local auth hints
+        try{
+          ['sb-access-token','sb-refresh-token','supabase.auth.token','lux_user_id','user_id'].forEach(k => localStorage.removeItem(k));
+        }catch{}
+        return false;
+      }
+
 const actionRaw = String(item.getAttribute('data-action') || '').trim();
 if(!actionRaw) return;
 
@@ -188,11 +219,11 @@ const evMap = {
   rewards: ['lux:settings:rewards', 'lux:settings:bonus'],
   security: ['lux:settings:security', 'lux:settings:email'],
   language: ['lux:settings:language'],
+  message: ['lux:settings:message'],
+  logout: ['lux:settings:logout'],
   about: ['lux:settings:about'],
   guide: ['lux:settings:guide', 'lux:settings:how'],
   getapp: ['lux:settings:getapp', 'lux:settings:download']
-  message: ['lux:settings:message'],
-  logout: ['lux:settings:logout'],
 };
 
 const events = evMap[action] || [`lux:settings:${action}`];
@@ -222,6 +253,19 @@ toast(label);
       if(action === 'security'){
         window.location.href = './security.html';
       }
+
+      if(action === 'message'){
+        window.location.href = './message.html';
+      }
+
+      if(action === 'logout'){
+        closeSettingsMenu();
+        toast('Signing out…');
+        const ok = await doLogout();
+        // Always redirect to login to avoid leaving a stale UI
+        window.location.href = './login.html';
+        return;
+      }
       closeSettingsMenu();
     });
   }
@@ -231,37 +275,7 @@ toast(label);
     if(settingsMenu && settingsMenu.classList.contains('show')) positionSettingsMenu();
   });
   document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') 
-      if(action === 'message'){
-        window.location.href = './message.html';
-      }
-
-      if(action === 'logout'){
-        (async () => {
-          try{
-            const sess = window.LUX && window.LUX.session;
-            const sb = window.LUX && window.LUX.sb;
-
-            if(sess && typeof sess.signOut === 'function'){
-              await sess.signOut();
-            }else if(sb && sb.auth && typeof sb.auth.signOut === 'function'){
-              await sb.auth.signOut();
-            }
-
-            localStorage.removeItem('lux_user_id');
-            localStorage.removeItem('user_id');
-            localStorage.removeItem('sb-access-token');
-            localStorage.removeItem('sb-refresh-token');
-          }catch(err){
-            // no-op
-          }finally{
-            window.location.href = './login.html';
-          }
-        })();
-        closeSettingsMenu();
-        return;
-      }
-closeSettingsMenu();
+    if(e.key === 'Escape') closeSettingsMenu();
   });
 
   const notifyBtn = qs('#notifyBtn');
