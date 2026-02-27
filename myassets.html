@@ -21,11 +21,6 @@
 
   <link rel="stylesheet" href="./styles.css" />
 
-  <script>
-    // Prevent flashing demo numbers before real data is loaded.
-    document.documentElement.classList.add('lux-loading-stats');
-  </script>
-
   <style>
     /* Settings menu upgrade (style only) */
     .lux-menu{
@@ -172,40 +167,6 @@
 .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(124,240,199,.18), 0 10px 30px rgba(124,240,199,.10); }
 #quickNetworkBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(143,181,255,.18), 0 10px 30px rgba(143,181,255,.10); }
 #analyticsBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(208,139,255,.18), 0 10px 30px rgba(208,139,255,.10); }
-
-/* Stats loading skeleton (no placeholders like __) */
-.lux-loading-stats #demoBalance,
-.lux-loading-stats .lux-mini-value{
-  color: transparent !important;
-  position: relative;
-}
-
-.lux-loading-stats #demoBalance::after{
-  content: "";
-  display: inline-block;
-  width: 140px;
-  height: 22px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.14), rgba(255,255,255,.06));
-  background-size: 200% 100%;
-  animation: luxShimmer 1.05s infinite;
-}
-
-.lux-loading-stats .lux-mini-value::after{
-  content: "";
-  display: inline-block;
-  width: 86px;
-  height: 14px;
-  border-radius: 7px;
-  background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.14), rgba(255,255,255,.06));
-  background-size: 200% 100%;
-  animation: luxShimmer 1.05s infinite;
-}
-
-@keyframes luxShimmer{
-  0%{ background-position: 0% 0%; }
-  100%{ background-position: 200% 0%; }
-}
 </style>
 
 </head>
@@ -282,7 +243,7 @@
           <div class="d-flex align-items-start justify-content-between gap-3">
             <div>
 	              <div class="lux-balance">
-	                <span id="demoBalance"></span>
+	                <span id="demoBalance">00,00</span>
 	                <span class="lux-balance-unit">USDT</span>
 	              </div>
 </div>
@@ -294,19 +255,19 @@
           <div class="lux-mini-grid">
             <div class="lux-mini">
               <div class="lux-mini-label">Today's Activity</div>
-              <div class="lux-mini-value" id="todayIncome"></div>
+              <div class="lux-mini-value" id="todayIncome">00.00</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Total Activity</div>
-              <div class="lux-mini-value" id="totalIncome"></div>
+              <div class="lux-mini-value" id="totalIncome">00,00</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Network Activity</div>
-              <div class="lux-mini-value" id="teamIncome"></div>
+              <div class="lux-mini-value" id="teamIncome">00.00</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Total Network Activity</div>
-              <div class="lux-mini-value" id="teamTotalIncome"></div>
+              <div class="lux-mini-value" id="teamTotalIncome">00,00</div>
             </div>
           </div>
         </div>
