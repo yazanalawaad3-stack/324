@@ -534,3 +534,63 @@ qsa('.lux-quick').forEach(btn => {
     document.body.classList.add('lux-loaded');
   });
 })();
+
+// --- merged from myassets.api.js (ui-safe init) ---
+(() => {
+  function initApi() {
+    const sb = window.LUX && window.LUX.sb;
+    const sess = window.LUX && window.LUX.session;
+    if (!sb || !sess) return false;
+
+    const uid = sess.requireAuth("./login.html");
+    if (!uid) return true;
+
+    async function load() {
+      try {
+        const res = await sb
+          .from("v_user_activity")
+          .select(
+            "user_id,public_id8,network_id7,level,status,balance,todays_activity,total_activity,network_activity,total_network_activity"
+          )
+          .eq("user_id", uid)
+          .maybeSingle();
+
+        if (res.error) throw res.error;
+
+        const data = res.data || {};
+        const setTxt = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val;
+        };
+
+        const fmt = (n) => {
+          const x = Number(n || 0);
+          if (!Number.isFinite(x)) return "0.00";
+          return x.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
+
+        setTxt("balanceText", fmt(data.balance) + " USDT");
+        setTxt("todaysActivityText", "$" + fmt(data.todays_activity));
+        setTxt("totalActivityText", "$" + fmt(data.total_activity));
+        setTxt("networkActivityText", "$" + fmt(data.network_activity));
+        setTxt("totalNetworkActivityText", "$" + fmt(data.total_network_activity));
+
+        localStorage.setItem("lux_public_id8", String(data.public_id8 || ""));
+        localStorage.setItem("lux_network_id7", String(data.network_id7 || ""));
+        localStorage.setItem("lux_level", String(data.level || ""));
+        localStorage.setItem("lux_status", String(data.status || ""));
+      } catch (err) {
+        sess.toast((err && err.message) || "Load error");
+      }
+    }
+
+    window.addEventListener("load", load);
+    return true;
+  }
+
+  let tries = 0;
+  const timer = setInterval(() => {
+    tries += 1;
+    if (initApi() || tries >= 60) clearInterval(timer);
+  }, 100);
+})();
