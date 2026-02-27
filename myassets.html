@@ -24,29 +24,57 @@
   <style>
     /* Settings menu upgrade (style only) */
     .lux-menu{
-      width: 320px;
+      width: 300px;
       max-width: calc(100vw - 24px);
-      border-radius: 18px;
+      max-height: calc(100vh - 140px);
+      border-radius: 16px;
       background: rgba(10,14,30,.55);
       border: 1px solid rgba(255,255,255,.10);
       box-shadow: 0 20px 60px rgba(0,0,0,.55);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 4px 0 6px;
     }
+
+    @media (max-width: 480px){
+      .lux-menu{
+        width: 280px;
+        max-height: calc(100vh - 110px);
+      }
+      .lux-menu-item{
+        padding: 10px 12px;
+        margin: 4px 6px;
+        border-radius: 12px;
+        gap: 10px;
+      }
+      .lux-menu-ic{
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        flex: 0 0 34px;
+      }
+      .lux-menu-ic i{ font-size: 15px; }
+      .lux-menu-tx{ font-size: 13px; }
+      .lux-menu-divider{ margin: 8px 12px; }
+    }
+
+
 
     .lux-menu-item{
       width: 100%;
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 14px;
+      padding: 11px 13px;
       background: transparent;
       border: 0;
       color: rgba(255,255,255,.88);
       transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
       border-radius: 14px;
-      margin: 6px 8px;
+      margin: 5px 7px;
     }
 
     .lux-menu-item:hover{
@@ -59,15 +87,15 @@
     }
 
     .lux-menu-ic{
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 14px;
       display: grid;
       place-items: center;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.10);
       box-shadow: 0 0 0 1px rgba(255,255,255,.04);
-      flex: 0 0 38px;
+      flex: 0 0 36px;
     }
 
     .lux-menu-ic i{
@@ -154,12 +182,12 @@
 }
 
 /* Icon colors + glow */
-#walletBtn .lux-quick-ico i{ color:#6EE7FF; }
+#walletBtn .lux-quick-ico i{ color:#FFD36E; }
 .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico i{ color:#7CF0C7; }
 #quickNetworkBtn .lux-quick-ico i{ color:#8FB5FF; }
 #analyticsBtn .lux-quick-ico i{ color:#D08BFF; }
 
-#walletBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(110,231,255,.18), 0 10px 30px rgba(110,231,255,.14); }
+#walletBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(255,211,110,.18), 0 10px 30px rgba(255,211,110,.10); }
 .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(124,240,199,.18), 0 10px 30px rgba(124,240,199,.10); }
 #quickNetworkBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(143,181,255,.18), 0 10px 30px rgba(143,181,255,.10); }
 #analyticsBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(208,139,255,.18), 0 10px 30px rgba(208,139,255,.10); }
