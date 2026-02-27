@@ -214,6 +214,9 @@ toast(label);
       if(action === 'rewards'){
         window.location.href = './rewards.html';
       }
+      if(action === 'luckydraw'){
+        window.location.href = './Luckydraw.html';
+      }
       if(action === 'security'){
         window.location.href = './security.html';
       }
