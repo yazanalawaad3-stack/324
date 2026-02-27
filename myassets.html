@@ -96,7 +96,74 @@
     .lux-menu-item[data-action="about"] .lux-menu-ic i{ color:#FFD36E; }
     .lux-menu-item[data-action="guide"] .lux-menu-ic i{ color:#7CF0C7; }
     .lux-menu-item[data-action="getapp"] .lux-menu-ic i{ color:#8FB5FF; }
-  </style>
+  
+
+/* Lux bottom quick actions - premium icon tabs */
+.lux-quick-wrap{
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(10,14,30,.35);
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+}
+.lux-quick-row{
+  display:flex;
+  gap:14px;
+}
+.lux-quick{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 14px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.86);
+  cursor:pointer;
+  transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.lux-quick:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.12);
+}
+.lux-quick:active{
+  transform: translateY(0px) scale(.99);
+}
+.lux-quick-label{
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.lux-quick-ico{
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  display:grid;
+  place-items:center;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.06);
+}
+.lux-quick-ico i{
+  font-size: 16px;
+}
+
+/* Icon colors + glow */
+#walletBtn .lux-quick-ico i{ color:#FFD36E; }
+.lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico i{ color:#7CF0C7; }
+#quickNetworkBtn .lux-quick-ico i{ color:#8FB5FF; }
+#analyticsBtn .lux-quick-ico i{ color:#D08BFF; }
+
+#walletBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(255,211,110,.18), 0 10px 30px rgba(255,211,110,.10); }
+.lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(124,240,199,.18), 0 10px 30px rgba(124,240,199,.10); }
+#quickNetworkBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(143,181,255,.18), 0 10px 30px rgba(143,181,255,.10); }
+#analyticsBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(208,139,255,.18), 0 10px 30px rgba(208,139,255,.10); }
+</style>
 
 </head>
 <body class="lux-body">
@@ -234,7 +301,7 @@
             </button>
 
             <button class="lux-quick" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-hand-holding"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-paper-plane"></i></span>
               <span class="lux-quick-label">Transfer</span>
             </button>
 
@@ -244,7 +311,7 @@
             </button>
 
             <button class="lux-quick" id="analyticsBtn" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-chart-column"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-file-lines"></i></span>
               <span class="lux-quick-label">Analytics</span>
             </button>
             </div>
