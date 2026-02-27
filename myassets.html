@@ -19,7 +19,62 @@
   <!-- Crypto icon font (BNB / TRX / ETH) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cryptocoins/2.9.0/webfont/cryptocoins.css" rel="stylesheet" />
 
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <link rel="stylesheet" href="./styles.css" />
+
+
+  <style>
+    /* Quick action buttons (Wallet / Transfer / Network / Analytics) icon upgrade */
+    .lux-quick .lux-quick-ico{
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    }
+    .lux-quick .lux-quick-ico svg{
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.2;
+    }
+
+    /* Per-button accent colors (matches the premium "network chip" vibe) */
+    #walletBtn .lux-quick-ico{
+      border-color: rgba(255,211,110,.22);
+      background: linear-gradient(135deg, rgba(255,211,110,.14), rgba(255,255,255,.06));
+      box-shadow: 0 0 0 1px rgba(255,211,110,.12), 0 16px 34px rgba(255,211,110,.10);
+    }
+    #walletBtn .lux-quick-ico svg{ stroke: #FFD36E; }
+
+    .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico{
+      border-color: rgba(124,240,199,.22);
+      background: linear-gradient(135deg, rgba(124,240,199,.14), rgba(255,255,255,.06));
+      box-shadow: 0 0 0 1px rgba(124,240,199,.12), 0 16px 34px rgba(124,240,199,.10);
+    }
+    .lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico svg{ stroke: #7CF0C7; }
+
+    #quickNetworkBtn .lux-quick-ico{
+      border-color: rgba(143,181,255,.22);
+      background: linear-gradient(135deg, rgba(143,181,255,.14), rgba(255,255,255,.06));
+      box-shadow: 0 0 0 1px rgba(143,181,255,.12), 0 16px 34px rgba(143,181,255,.10);
+    }
+    #quickNetworkBtn .lux-quick-ico svg{ stroke: #8FB5FF; }
+
+    #analyticsBtn .lux-quick-ico{
+      border-color: rgba(208,139,255,.22);
+      background: linear-gradient(135deg, rgba(208,139,255,.14), rgba(255,255,255,.06));
+      box-shadow: 0 0 0 1px rgba(208,139,255,.12), 0 16px 34px rgba(208,139,255,.10);
+    }
+    #analyticsBtn .lux-quick-ico svg{ stroke: #D08BFF; }
+
+    .lux-quick:active{ transform: translateY(0px) scale(.99); }
+  </style>
 
 </head>
 <body class="lux-body">
@@ -152,22 +207,22 @@
           <div class="lux-quick-wrap" aria-label="Quick actions">
             <div class="lux-quick-row">
             <button class="lux-quick" id="walletBtn" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-wallet"></i></span>
+              <span class="lux-quick-ico"><i data-lucide="wallet" aria-hidden="true"></i></span>
               <span class="lux-quick-label">Wallet</span>
             </button>
 
             <button class="lux-quick" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-hand-holding"></i></span>
+              <span class="lux-quick-ico"><i data-lucide="send" aria-hidden="true"></i></span>
               <span class="lux-quick-label">Transfer</span>
             </button>
 
             <button class="lux-quick" id="quickNetworkBtn" type="button" aria-label="Network">
-              <span class="lux-quick-ico"><i class="fa-solid fa-users"></i></span>
+              <span class="lux-quick-ico"><i data-lucide="share-2" aria-hidden="true"></i></span>
               <span class="lux-quick-label">Network</span>
             </button>
 
             <button class="lux-quick" id="analyticsBtn" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-chart-column"></i></span>
+              <span class="lux-quick-ico"><i data-lucide="bar-chart-3" aria-hidden="true"></i></span>
               <span class="lux-quick-label">Analytics</span>
             </button>
             </div>
@@ -285,5 +340,14 @@
 <script src="./supabase-client.js"></script>
 <script src="./session.js"></script>
 <script src="./myassets.api.js"></script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  });
+</script>
+
 </body>
 </html>
