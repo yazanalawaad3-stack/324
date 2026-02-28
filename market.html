@@ -5,9 +5,43 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Demo Trading (Educational) - Pro UI</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Back button (unified style) */
+    .luxBack{
+      width:36px;height:36px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(11,12,16,.95);
+      display:flex;align-items:center;justify-content:center;
+      text-decoration:none;flex:0 0 auto
+    }
+    .luxArrow{
+      width:10px;height:10px;
+      border-left:2px solid #f5c542;
+      border-bottom:2px solid #f5c542;
+      transform:rotate(45deg);
+      margin-left:2px
+    }
+
+    /* Responsive fixes (do not touch JS / Supabase wiring) */
+    #chartCanvas{width:100%;height:420px;display:block}
+
+    @media (max-width: 980px){
+      header.top{flex-wrap:wrap;gap:10px}
+      header.top .topRight{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:10px}
+      main.layout{display:flex;flex-direction:column;gap:14px}
+      .chartCard,.side{width:100%}
+      .tableWrap{overflow:auto}
+      #chartCanvas{height:360px}
+    }
+    @media (max-width: 480px){
+      header.top .sub{display:none}
+      #chartCanvas{height:320px}
+    }
+  </style>
 </head>
 <body>
   <header class="top">
+    <a class="luxBack" href="myassets.html" aria-label="Back"><span class="luxArrow"></span></a>
     <div class="brand">
       <div class="dot"></div>
       <div>
