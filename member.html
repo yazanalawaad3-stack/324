@@ -59,6 +59,24 @@
     }
     .iconbtn:active{ transform: scale(.98); background:rgba(255,255,255,.06); }
 
+    /* Unified back button */
+    .back-btn{
+      width:36px;height:36px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(11,12,16,.95);
+      display:flex;align-items:center;justify-content:center;
+      text-decoration:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s ease;
+    }
+    .back-btn:active{ transform: scale(.98); }
+    .back-arrow{
+      width:10px;height:10px;
+      border-left:2px solid var(--gold1);
+      border-bottom:2px solid var(--gold1);
+      transform: rotate(45deg);
+    }
+
     .container{ width:min(980px, 100%); margin: 0 auto; padding: 14px 12px 26px; }
     .row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:10px; }
     .pill{
@@ -405,11 +423,9 @@
   <div class="page">
     <header class="topbar">
       <div class="left">
-        <button class="iconbtn" id="backBtn" type="button" aria-label="Back">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        <a class="back-btn" href="myassets.html" aria-label="Back">
+          <span class="back-arrow" aria-hidden="true"></span>
+        </a>
       </div>
       <div class="title">Member</div>
       <div class="right">
@@ -605,7 +621,7 @@
       modalText: document.getElementById("modalText"),
       modalClose: document.getElementById("modalClose"),
       modalLater: document.getElementById("modalLater"),
-      modalOk: document.getElementById("modalOk"),      backBtn: document.getElementById("backBtn"),
+      modalOk: document.getElementById("modalOk"),
       tabs: Array.from(document.querySelectorAll(".tab"))
     };
 
@@ -746,7 +762,6 @@ els.tabs.forEach((t) => {
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModal();
       });
-      els.backBtn.addEventListener("click", () => { window.location.href = "myassets.html"; });
       selectLevel(data.currentLevel || "V1");
     }
 
