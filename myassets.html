@@ -21,154 +21,6 @@
 
   <link rel="stylesheet" href="./styles.css" />
 
-  <style>
-    /* Settings menu upgrade (style only) */
-    .lux-menu{
-      width: 280px;
-      max-width: calc(100vw - 24px);
-      max-height: calc(100vh - 120px);
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      border-radius: 18px;
-      background: rgba(10,14,30,.55);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 20px 60px rgba(0,0,0,.55);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      overflow: hidden;
-    }
-
-    .lux-menu-item{
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      background: transparent;
-      border: 0;
-      color: rgba(255,255,255,.88);
-      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
-      border-radius: 12px;
-      margin: 5px 6px;
-    }
-
-    .lux-menu-item:hover{
-      background: rgba(255,255,255,.06);
-      transform: translateY(-1px);
-    }
-
-    .lux-menu-item:active{
-      transform: translateY(0px) scale(.99);
-    }
-
-    .lux-menu-ic{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 0 0 1px rgba(255,255,255,.04);
-      flex: 0 0 34px;
-    }
-
-    .lux-menu-ic i{
-      font-size: 16px;
-      opacity: .95;
-    }
-
-    .lux-menu-tx{
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: .2px;
-    }
-
-    .lux-menu-divider{
-      height: 1px;
-      margin: 10px 14px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
-    }
-
-    /* Per-item accent colors */
-    .lux-menu-item[data-action="member"] .lux-menu-ic i{ color:#FFD36E; }
-    .lux-menu-item[data-action="rewards"] .lux-menu-ic i{ color:#7CF0C7; }
-    .lux-menu-item[data-action="luckydraw"] .lux-menu-ic i{ color:#FF8BD6; }
-    .lux-menu-item[data-action="security"] .lux-menu-ic i{ color:#8FB5FF; }
-    .lux-menu-item[data-action="language"] .lux-menu-ic i{ color:#D08BFF; }
-
-    .lux-menu-item[data-action="about"] .lux-menu-ic i{ color:#FFD36E; }
-    .lux-menu-item[data-action="guide"] .lux-menu-ic i{ color:#7CF0C7; }
-    .lux-menu-item[data-action="getapp"] .lux-menu-ic i{ color:#8FB5FF; }
-  
-
-/* Lux bottom quick actions - premium icon tabs */
-.lux-quick-wrap{
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 18px;
-  background: rgba(10,14,30,.35);
-  border: 1px solid rgba(255,255,255,.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 18px 60px rgba(0,0,0,.35);
-}
-.lux-quick-row{
-  display:flex;
-  gap:14px;
-}
-.lux-quick{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding: 14px 10px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.05);
-  color: rgba(255,255,255,.86);
-  cursor:pointer;
-  transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
-}
-.lux-quick:hover{
-  transform: translateY(-1px);
-  background: rgba(255,255,255,.08);
-  border-color: rgba(255,255,255,.12);
-}
-.lux-quick:active{
-  transform: translateY(0px) scale(.99);
-}
-.lux-quick-label{
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .2px;
-}
-.lux-quick-ico{
-  width: 36px;
-  height: 36px;
-  border-radius: 14px;
-  display:grid;
-  place-items:center;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.06);
-}
-.lux-quick-ico i{
-  font-size: 16px;
-}
-
-/* Icon colors + glow */
-#walletBtn .lux-quick-ico i{ color:#FFD36E; }
-.lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico i{ color:#7CF0C7; }
-#quickNetworkBtn .lux-quick-ico i{ color:#8FB5FF; }
-#analyticsBtn .lux-quick-ico i{ color:#D08BFF; }
-
-#walletBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(255,211,110,.18), 0 10px 30px rgba(255,211,110,.10); }
-.lux-quick-row .lux-quick:nth-child(2) .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(124,240,199,.18), 0 10px 30px rgba(124,240,199,.10); }
-#quickNetworkBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(143,181,255,.18), 0 10px 30px rgba(143,181,255,.10); }
-#analyticsBtn .lux-quick-ico{ box-shadow: 0 0 0 1px rgba(208,139,255,.18), 0 10px 30px rgba(208,139,255,.10); }
-</style>
-
 </head>
 <body class="lux-body">
   <div class="lux-ai-bg" aria-hidden="true"></div>
@@ -178,7 +30,7 @@
     <div class="lux-top-id" aria-label="User ID">
       <div class="lux-id-chip" role="group" aria-label="User ID">
         <span class="lux-id-label">ID</span>
-        <span class="lux-id-value" id="userIdValue"></span>
+        <span class="lux-id-value" id="userIdValue">750899</span>
         <button class="lux-id-copy" id="copyUserIdBtn" type="button" aria-label="Copy user ID">
           <i class="fa-regular fa-copy" aria-hidden="true"></i>
         </button>
@@ -186,8 +38,8 @@
     </div>
 
     <div class="lux-top-actions" aria-label="Top actions">
-      <button class="lux-gear-fab lux-top-action" id="refreshBtn" type="button" aria-label="Refresh">
-        <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+      <button class="lux-gear-fab lux-top-action" id="notifyBtn" type="button" aria-label="Notifications">
+        <i class="fa-solid fa-bell" aria-hidden="true"></i>
       </button>
       <button class="lux-gear-fab lux-top-action" id="settingsBtn" type="button" aria-label="Settings">
         <i class="fa-solid fa-gear" aria-hidden="true"></i>
@@ -205,7 +57,7 @@
         <span class="lux-menu-tx">Rewards</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="luckydraw" role="menuitem" onclick="window.location.href='./Luckydraw.html'">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-gift"></i></span>
+        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-life-ring"></i></span>
         <span class="lux-menu-tx">Lucky Draw</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="security" role="menuitem">
@@ -226,7 +78,7 @@
         <span class="lux-menu-tx">Platform Guide</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="getapp" role="menuitem">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-mobile-screen-button"></i></span>
+        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-download"></i></span>
         <span class="lux-menu-tx">Get the App</span>
       </button>
     </div>
@@ -243,7 +95,7 @@
           <div class="d-flex align-items-start justify-content-between gap-3">
             <div>
 	              <div class="lux-balance">
-	                <span id="demoBalance">00,00</span>
+	                <span id="demoBalance">12,480.00</span>
 	                <span class="lux-balance-unit">USDT</span>
 	              </div>
 </div>
@@ -255,19 +107,19 @@
           <div class="lux-mini-grid">
             <div class="lux-mini">
               <div class="lux-mini-label">Today's Activity</div>
-              <div class="lux-mini-value" id="todayIncome">00.00</div>
+              <div class="lux-mini-value" id="todayIncome">$128.50</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Total Activity</div>
-              <div class="lux-mini-value" id="totalIncome">00,00</div>
+              <div class="lux-mini-value" id="totalIncome">$9,340.10</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Network Activity</div>
-              <div class="lux-mini-value" id="teamIncome">00.00</div>
+              <div class="lux-mini-value" id="teamIncome">$412.00</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Total Network Activity</div>
-              <div class="lux-mini-value" id="teamTotalIncome">00,00</div>
+              <div class="lux-mini-value" id="teamTotalIncome">$21,880.75</div>
             </div>
           </div>
         </div>
@@ -305,7 +157,7 @@
             </button>
 
             <button class="lux-quick" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-paper-plane"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-hand-holding"></i></span>
               <span class="lux-quick-label">Transfer</span>
             </button>
 
@@ -315,7 +167,7 @@
             </button>
 
             <button class="lux-quick" id="analyticsBtn" type="button">
-              <span class="lux-quick-ico"><i class="fa-solid fa-file-lines"></i></span>
+              <span class="lux-quick-ico"><i class="fa-solid fa-chart-column"></i></span>
               <span class="lux-quick-label">Analytics</span>
             </button>
             </div>
@@ -427,79 +279,11 @@
 
   <script type="module" src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"></script>
   <script nomodule src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-(function(){
-  // Minimal config loader
-  function readConfig() {
-    try {
-      if (window.LUX_CONFIG && typeof window.LUX_CONFIG === 'object') return window.LUX_CONFIG;
-      const raw = localStorage.getItem('lux_supabase_config') || localStorage.getItem('supabase_config');
-      if (!raw) return null;
-      const cfg = JSON.parse(raw);
-      if (!cfg || typeof cfg !== 'object') return null;
-      return cfg;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Create shared namespace
-  window.LUX = window.LUX || {};
-  window.LUX.session = window.LUX.session || {};
-
-  // Basic session/uid resolver (non-blocking)
-  window.LUX.session.getUserId = function() {
-    const raw =
-      window.LUX_USER_ID ||
-      window.USER_ID ||
-      localStorage.getItem('lux_user_id') ||
-      localStorage.getItem('user_id') ||
-      localStorage.getItem('uid') ||
-      '';
-    const uid = String(raw || '').trim();
-    return uid || null;
-  };
-
-  window.LUX.session.requireAuth = function(redirectUrl) {
-    // If you have a login flow, store user id in localStorage as lux_user_id
-    const uid = window.LUX.session.getUserId();
-    if (!uid) {
-      // Do not redirect automatically to avoid breaking offline preview
-      return null;
-    }
-    return uid;
-  };
-
-  function initSupabase() {
-    const cfg = readConfig();
-    if (!cfg) return null;
-    const url = String(cfg.supabaseUrl || cfg.url || '').trim();
-    const key = String(cfg.supabaseAnonKey || cfg.anonKey || cfg.key || '').trim();
-    if (!url || !key) return null;
-    if (!window.supabase || !window.supabase.createClient) return null;
-    try {
-      return window.supabase.createClient(url, key);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Init client if possible
-  const client = initSupabase();
-  if (client) {
-    window.LUX.sb = client;
-  }
-})();
-</script>
-
-
-
-
-
-
-
-  <script src="./myassets.api.js"></script>
+  <script src="./app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<script src="./supabase-client.js"></script>
+<script src="./session.js"></script>
+<script src="./myassets.api.js"></script>
 </body>
 </html>
