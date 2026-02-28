@@ -117,23 +117,8 @@
     userIdEl.textContent = uid;
 
     if(copyUserIdBtn){
-      /*
-       * When copying the user ID, prefer the most up‑to‑date public ID that has
-       * been saved to localStorage by the Supabase loader. Relying solely on
-       * the textContent of the #userIdValue element can inadvertently copy the
-       * initial UUID shown during page load. By checking the
-       * 'lux_public_id8' entry in localStorage first, we ensure the copy
-       * operation picks up the correct numeric ID once it has been loaded.
-       */
       copyUserIdBtn.addEventListener('click', async () => {
-        // Attempt to read the public ID saved by Supabase. Trim to remove any
-        // stray whitespace.
-        let luxPublicId = localStorage.getItem('lux_public_id8');
-        luxPublicId = luxPublicId && luxPublicId.trim() ? luxPublicId.trim() : null;
-        // Fallback to whatever is currently displayed on the page, or the
-        // original UID if neither exists.
-        const text = luxPublicId || String(userIdEl.textContent || uid).trim();
-        const ok = await safeCopy(text);
+        const ok = await safeCopy(uid);
         toast(ok ? 'ID copied ✅' : 'Copy failed');
       });
     }
