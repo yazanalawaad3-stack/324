@@ -274,13 +274,22 @@ quickButtons.forEach(btn => {
       window.location.href = './wallet.html';
     });
   }
-// Navigate to Analytics page
-  const analyticsBtn = qs('#analyticsBtn');
-  if(analyticsBtn){
-    analyticsBtn.addEventListener('click', () => {
+  // Navigate to Records page (formerly Analytics)
+  const recordsTargets = [
+    qs('#recordsBtn'),
+    qs('#Records'),
+    qs('#analyticsBtn')
+  ].filter(Boolean);
+
+  // Avoid double-binding if multiple selectors point to the same element
+  const seen = new Set();
+  recordsTargets.forEach(el => {
+    if(seen.has(el)) return;
+    seen.add(el);
+    el.addEventListener('click', () => {
       window.location.href = './records.html';
     });
-  }
+  });
 
 // Show a toast for other quick buttons too (Wallet / Transfer / Analytics)
 qsa('.lux-quick').forEach(btn => {
