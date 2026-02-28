@@ -538,14 +538,14 @@ qsa('.lux-quick').forEach(btn => {
 
 // Supabase data loader integrated from myassets.api.js
 (function () {
-  const sb = window.LUX && window.LUX.sb;
-  const sess = window.LUX && window.LUX.session;
-  if (!sb || !sess) return;
 
-  const uid = sess.requireAuth("./login.html");
-  if (!uid) return;
 
   async function load() {
+    const sb = window.LUX && window.LUX.sb;
+    const sess = window.LUX && window.LUX.session;
+    if (!sb || !sess) return;
+    const uid = sess.requireAuth("./login.html");
+    if (!uid) return;
     try {
       const res = await sb
         .from("v_user_activity")
