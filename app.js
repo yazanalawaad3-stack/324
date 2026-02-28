@@ -107,9 +107,13 @@
   const copyUserIdBtn = qs('#copyUserIdBtn');
   if(userIdEl){
     const raw = (
-      window.LUX_USER_ID ||
-      window.USER_ID ||
-      localStorage.getItem('lux_user_id') ||
+      // Prefer the public numeric ID, not the Supabase auth UUID.
+      window.LUX_PUBLIC_ID8 ||
+      window.PUBLIC_ID8 ||
+      localStorage.getItem('lux_public_id8') ||
+      localStorage.getItem('public_id8') ||
+      window.LUX_USER_ID || // fallback (legacy)
+      window.USER_ID ||     // fallback (legacy)
       localStorage.getItem('user_id') ||
       userIdEl.textContent
     );
