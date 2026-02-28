@@ -67,7 +67,7 @@
         }else if(s.includes('ai')){
           window.location.href = './ai-assets.html';
         }else if(s === 'market'){
-          window.location.href = './index000.html';
+          window.location.href = './market.html';
         }
       }
     });
@@ -250,7 +250,7 @@ const quickNetworkBtn = qs('#quickNetworkBtn');
 if(quickNetworkBtn){
   quickNetworkBtn.addEventListener('click', () => {
     // Navigate to the new network page instead of emitting only events.
-    window.location.href = './network.html';
+    window.location.href = './myteam.html';
   });
 }
 
