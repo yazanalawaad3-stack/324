@@ -32,6 +32,9 @@
       }catch{
         return false;
       }
+    }
+  }
+
 
   async function hardRefresh(){
     try{
@@ -60,18 +63,12 @@
   }
 
   function bindRefreshButton(){
-    const btn =
-      qs('#pageRefreshBtn') ||
-      qs('#walletRefreshBtn') ||
-      qs('#assetsRefreshBtn') ||
-      qs('#notifyBtn');
+    const btn = qs('#pageRefreshBtn') || qs('#walletRefreshBtn') || qs('#assetsRefreshBtn');
     if(!btn) return;
     btn.addEventListener('click', () => {
-      closeSettingsMenu?.();
+      closeSettingsMenu();
       hardRefresh();
     });
-  }
-    }
   }
 
   // Bottom dock active state + indicator
@@ -311,7 +308,7 @@ toast(label);
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape') closeSettingsMenu();
   });
-
+  // Refresh button (replaces old notifications button)
   bindRefreshButton();
 
 // Quick actions
