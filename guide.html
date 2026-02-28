@@ -16,6 +16,7 @@
   --brand2:#22c55e;
   --radius:18px;
   --shadow:0 10px 30px rgba(0,0,0,.35);
+  --accent:#f5c542;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -42,12 +43,15 @@ a{color:inherit; text-decoration:none}
 }
 .lux-head-tight{padding:12px 14px}
 .lux-back{
-  width:40px; height:40px; border-radius:14px;
-  display:grid; place-items:center;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--line);
+  width:36px;height:36px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(11,12,16,.95);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;
+  color:var(--accent);
 }
 .lux-back:active{transform:scale(.98)}
+.arrow{width:10px;height:10px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
 .lux-head-title{display:flex; flex-direction:column; gap:2px}
 .lux-h1{font-weight:700; font-size:18px; letter-spacing:.2px}
 .lux-h2{font-size:13px; color:var(--muted)}
@@ -92,7 +96,7 @@ a{color:inherit; text-decoration:none}
     <!-- Header -->
     <header class="lux-head lux-head-tight" aria-label="Platform Guide header">
       <a class="lux-back" href="./myassets.html" aria-label="Back">
-        <span class="lux-icon"><svg class="lux-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="arrow"></div>
       </a>
 
       <div class="lux-head-title">
