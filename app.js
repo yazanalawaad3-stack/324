@@ -224,6 +224,9 @@ toast(label);
       if(action === 'security'){
         window.location.href = './security.html';
       }
+      if(action === 'message'){
+        window.location.href = './message.html';
+      }
       closeSettingsMenu();
     });
   }
