@@ -2,6 +2,19 @@
   const qs = (s, el=document) => el.querySelector(s);
   const qsa = (s, el=document) => [...el.querySelectorAll(s)];
 
+
+  function cleanRefreshParam(){
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('_r')) {
+        url.searchParams.delete('_r');
+        history.replaceState(null, '', url.pathname + (url.search ? url.search : '') + url.hash);
+      }
+    } catch (e) {}
+  }
+  cleanRefreshParam();
+
+
   const toastEl = qs('#luxToast');
   const toastText = qs('#toastText');
   let toastTimer = null;
