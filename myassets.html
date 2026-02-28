@@ -21,36 +21,6 @@
 
   <link rel="stylesheet" href="./styles.css" />
 
-  <style>
-    /* Quick actions: premium colored icons + subtle glow (no layout changes) */
-    :root{
-      --qa-wallet-a:#2ee6a6; --qa-wallet-b:#2bb1ff;
-      --qa-transfer-a:#ffb95a; --qa-transfer-b:#ff4bd8;
-      --qa-team-a:#a86bff; --qa-team-b:#2bd9ff;
-      --qa-records-a:#6dff7b; --qa-records-b:#ffd85a;
-    }
-
-    .lux-quick[data-accent] .lux-quick-ico i{
-      background: var(--qa-grad, linear-gradient(135deg, #fff, #fff));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 8px var(--qa-glow, rgba(255,255,255,.15)));
-      transition: transform .18s ease, filter .18s ease;
-    }
-
-    .lux-quick[data-accent]:hover .lux-quick-ico i,
-    .lux-quick[data-accent]:focus-visible .lux-quick-ico i{
-      transform: translateY(-1px) scale(1.04);
-      filter: drop-shadow(0 0 12px var(--qa-glow, rgba(255,255,255,.20)));
-    }
-
-    .lux-quick[data-accent="wallet"]{ --qa-grad: linear-gradient(135deg, var(--qa-wallet-a), var(--qa-wallet-b)); --qa-glow: rgba(46,230,166,.35); }
-    .lux-quick[data-accent="transfer"]{ --qa-grad: linear-gradient(135deg, var(--qa-transfer-a), var(--qa-transfer-b)); --qa-glow: rgba(255,105,180,.32); }
-    .lux-quick[data-accent="team"]{ --qa-grad: linear-gradient(135deg, var(--qa-team-a), var(--qa-team-b)); --qa-glow: rgba(168,107,255,.34); }
-    .lux-quick[data-accent="records"]{ --qa-grad: linear-gradient(135deg, var(--qa-records-a), var(--qa-records-b)); --qa-glow: rgba(255,216,90,.28); }
-  </style>
-
 </head>
 <body class="lux-body">
   <div class="lux-ai-bg" aria-hidden="true"></div>
@@ -190,23 +160,23 @@
 
           <div class="lux-quick-wrap" aria-label="Quick actions">
             <div class="lux-quick-row">
-            <button class="lux-quick" id="walletBtn" type="button" data-accent="wallet">
-              <span class="lux-quick-ico"><i class="fa-solid fa-wallet"></i></span>
+            <button class="lux-quick" id="walletBtn" type="button">
+              <span class="lux-quick-ico"><i class="fa-solid fa-wallet" style="color: #FFD36E;"></i></span>
               <span class="lux-quick-label">Wallet</span>
             </button>
 
-            <button class="lux-quick" id="transferBtn" type="button" data-accent="transfer">
-              <span class="lux-quick-ico"><i class="fa-solid fa-hand-holding"></i></span>
+            <button class="lux-quick" type="button">
+              <span class="lux-quick-ico"><i class="fa-solid fa-paper-plane" style="color: #7CF0C7;"></i></span>
               <span class="lux-quick-label">Transfer</span>
             </button>
 
-            <button class="lux-quick" id="quickNetworkBtn" type="button" aria-label="My team" data-accent="team">
-              <span class="lux-quick-ico"><i class="fa-solid fa-users"></i></span>
+            <button class="lux-quick" id="quickNetworkBtn" type="button" aria-label="My team">
+              <span class="lux-quick-ico"><i class="fa-solid fa-users" style="color: #8FB5FF;"></i></span>
               <span class="lux-quick-label">My team</span>
             </button>
 
-            <button class="lux-quick" id="Records" type="button" data-accent="records">
-              <span class="lux-quick-ico"><i class="fa-solid fa-chart-column"></i></span>
+            <button class="lux-quick" id="Records" type="button">
+              <span class="lux-quick-ico"><i class="fa-solid fa-file-lines" style="color: #D08BFF;"></i></span>
               <span class="lux-quick-label">Records</span>
             </button>
             </div>
