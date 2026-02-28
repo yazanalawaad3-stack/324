@@ -21,7 +21,7 @@
 
   <style>
     /* Small fallback so the page stays clean even if styles.css isn't loaded in a standalone preview */
-    :root { color-scheme: dark; }
+    :root { color-scheme: dark; --gold1:#f6c453; }
     body { background:#0b0c0f; color:#e9ecf2; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
     .lux-page { min-height: 100dvh; padding-bottom: 24px; }
     .lux-topbar {
@@ -84,7 +84,15 @@
       font-weight: 700;
     }
     .lux-note { opacity:.7; font-size:.86rem; }
-  </style>
+  
+    /* Unified back button (matches reference) */
+    .back-btn{
+      color: var(--gold1);
+      font-size: 20px;
+      line-height: 1;
+      text-decoration: none;
+    }
+</style>
 </head>
 
 <body class="lux-body">
@@ -92,9 +100,7 @@
     <header class="lux-topbar">
       <div class="container px-2">
         <div class="d-flex align-items-center gap-2">
-          <button class="btn-ic" id="backBtn" type="button" aria-label="Back">
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
+          <button class="btn-ic back-btn" id="backBtn" type="button" aria-label="Back">&#x2190;</button>
           <div class="flex-grow-1">
             <h1 class="lux-title">Language Settings</h1>
             <p class="lux-sub">Choose your preferred language</p>
