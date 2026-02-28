@@ -169,7 +169,7 @@
   }
 
   if(settingsMenu){
-    settingsMenu.addEventListener('click', async (e) => {
+    settingsMenu.addEventListener('click', (e) => {
       e.stopPropagation();
       const item = e.target.closest('.lux-menu-item');
       if(!item) return;
@@ -194,8 +194,7 @@ const evMap = {
   language: ['lux:settings:language'],
   about: ['lux:settings:about'],
   guide: ['lux:settings:guide', 'lux:settings:how'],
-  getapp: ['lux:settings:getapp', 'lux:settings:download'],
-  logout: ['lux:settings:logout']
+  getapp: ['lux:settings:getapp', 'lux:settings:download']
 };
 
 const events = evMap[action] || [`lux:settings:${action}`];
@@ -228,35 +227,8 @@ toast(label);
       if(action === 'message'){
         window.location.href = './message.html';
       }
-
-      if(action === 'logout'){
-        try{
-          const sb = window.LUX && window.LUX.sb;
-          if(sb && sb.auth && typeof sb.auth.signOut === 'function'){
-            await sb.auth.signOut();
-          }
-        }catch{
-          // ignore
-        }
-        try{
-          const sess = window.LUX && window.LUX.session;
-          if(sess && typeof sess.clearAuth === 'function'){
-            sess.clearAuth();
-          }
-        }catch{
-          // ignore
-        }
-
-        // Best-effort local cleanup (keeps UI consistent even if session.js differs)
-        try{
-          ['lux_public_id8','public_id8','lux_network_id7','lux_level','lux_status','user_id','lux_auth_user_id'].forEach(k => localStorage.removeItem(k));
-        }catch{
-          // ignore
-        }
-
-        closeSettingsMenu();
-        window.location.href = './login.html';
-        return;
+      if(action === 'getapp'){
+        window.location.href = './mobile.html';
       }
       closeSettingsMenu();
     });
