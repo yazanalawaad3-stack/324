@@ -28,20 +28,28 @@
     .app{min-height:100vh;background:var(--page-bg)}
 
     .header{
-      position:sticky;top:0;z-index:50;height:56px;
-      display:flex;align-items:center;gap:10px;
-      padding:0 14px;
-      background:#000;border-bottom:1px solid rgba(255,255,255,.06)
-    }
-    .back{
-      width:36px;height:36px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(11,12,16,.95);
+      position:sticky;top:0;z-index:50;height:50px;
       display:flex;align-items:center;justify-content:center;
-      text-decoration:none
+      padding:0 14px;
+      background:rgba(5,7,11,.55);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(10px)
+    }
+    .back-btn{
+      position:absolute;
+      left:14px;
+      color:var(--accent);
+      font-size:20px;
+      text-decoration:none;
+      line-height:1
     }
     .arrow{width:10px;height:10px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg)}
-    .title{flex:1;text-align:center;font-size:16px;font-weight:650;letter-spacing:.2px;color:rgba(255,255,255,.72);margin-right:46px}
+    .title{
+      font-size:16px;
+      font-weight:650;
+      letter-spacing:.2px;
+      color:rgba(255,255,255,.72)
+    }
 
     main{padding:18px 16px 28px}
 
@@ -262,7 +270,7 @@
 <body>
   <div class="app">
     <header class="header">
-      <a class="back" href="myassets.html" aria-label="Back"><div class="arrow"></div></a>
+      <a class="back-btn" href="myassets.html" aria-label="Back">←</a>
       <div class="title">Network</div>
     </header>
 
