@@ -118,7 +118,8 @@
 
     if(copyUserIdBtn){
       copyUserIdBtn.addEventListener('click', async () => {
-        const ok = await safeCopy(uid);
+        const text = String(userIdEl.textContent || uid).trim();
+        const ok = await safeCopy(text);
         toast(ok ? 'ID copied ✅' : 'Copy failed');
       });
     }
