@@ -275,11 +275,51 @@ toast(label);
 
   const notifyBtn = qs('#notifyBtn');
   if(notifyBtn){
-    notifyBtn.addEventListener('click', () => {
+    let refreshing = false;
+
+    const hardRefresh = async () => {
+      if(refreshing) return;
+      refreshing = true;
+      notifyBtn.disabled = true;
       closeSettingsMenu();
-      window.dispatchEvent(new CustomEvent('lux:notifications:open'));
-      toast('Notifications');
-    });
+      toast('Refreshing...');
+
+      try{
+        if('caches' in window && caches && typeof caches.keys === 'function'){
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      }catch{
+        // ignore
+      }
+
+      try{
+        if('serviceWorker' in navigator && navigator.serviceWorker && typeof navigator.serviceWorker.getRegistrations === 'function'){
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+      }catch{
+        // ignore
+      }
+
+      try{
+        if(window.sessionStorage && typeof sessionStorage.clear === 'function'){
+          sessionStorage.clear();
+        }
+      }catch{
+        // ignore
+      }
+
+      try{
+        const url = new URL(window.location.href);
+        url.searchParams.set('_r', String(Date.now()));
+        window.location.replace(url.toString());
+      }catch{
+        window.location.reload();
+      }
+    };
+
+    notifyBtn.addEventListener('click', hardRefresh);
   }
 
 // Quick actions
