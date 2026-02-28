@@ -395,9 +395,9 @@ qsa('.lux-quick').forEach(btn => {
 
   function fmtUsd(v){
     if(!Number.isFinite(v)) return '--';
-    if(v >= 1000) return `${v.toLocaleString('en-US', { maximumFractionDigits: 0 })} USDT`;
-    if(v >= 1) return `${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDT`;
-    return `${v.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })} USDT`;
+    if(v >= 1000) return `${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    if(v >= 1) return `${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `${v.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })}`;
   }
 
   function fmtPct(v){
