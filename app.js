@@ -278,7 +278,7 @@ quickButtons.forEach(btn => {
   const analyticsBtn = qs('#analyticsBtn');
   if(analyticsBtn){
     analyticsBtn.addEventListener('click', () => {
-      window.location.href = './analytics.html';
+      window.location.href = './records.html';
     });
   }
 
