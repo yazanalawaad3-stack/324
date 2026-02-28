@@ -30,7 +30,7 @@
     <div class="lux-top-id" aria-label="User ID">
       <div class="lux-id-chip" role="group" aria-label="User ID">
         <span class="lux-id-label">ID</span>
-        <span class="lux-id-value" id="userIdValue"></span>
+        <span class="lux-id-value" id="userIdValue">750899</span>
         <button class="lux-id-copy" id="copyUserIdBtn" type="button" aria-label="Copy user ID">
           <i class="fa-regular fa-copy" aria-hidden="true"></i>
         </button>
@@ -38,8 +38,8 @@
     </div>
 
     <div class="lux-top-actions" aria-label="Top actions">
-      <button class="lux-gear-fab lux-top-action" id="pageRefreshBtn" type="button" aria-label="Refresh">
-        <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+      <button class="lux-gear-fab lux-top-action" id="notifyBtn" type="button" aria-label="Notifications">
+        <i class="fa-solid fa-bell" aria-hidden="true"></i>
       </button>
       <button class="lux-gear-fab lux-top-action" id="settingsBtn" type="button" aria-label="Settings">
         <i class="fa-solid fa-gear" aria-hidden="true"></i>
@@ -56,17 +56,9 @@
         <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-trophy"></i></span>
         <span class="lux-menu-tx">Rewards</span>
       </button>
-      <button class="lux-menu-item" type="button" data-action="luckydraw" role="menuitem" onclick="window.location.href='./Luckydraw.html'">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-life-ring"></i></span>
-        <span class="lux-menu-tx">Lucky Draw</span>
-      </button>
       <button class="lux-menu-item" type="button" data-action="security" role="menuitem">
         <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span>
         <span class="lux-menu-tx">Security Center</span>
-      </button>
-      <button class="lux-menu-item" type="button" data-action="message" role="menuitem">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-message"></i></span>
-        <span class="lux-menu-tx">Message</span>
       </button>
       <button class="lux-menu-item" type="button" data-action="language" role="menuitem">
         <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-language"></i></span>
@@ -83,12 +75,7 @@
       </button>
       <button class="lux-menu-item" type="button" data-action="getapp" role="menuitem">
         <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-download"></i></span>
-        <span class="lux-menu-tx">Download App</span>
-      </button>
-
-      <button class="lux-menu-item" type="button" data-action="logout" role="menuitem">
-        <span class="lux-menu-ic" aria-hidden="true"><i class="fa-solid fa-right-from-bracket"></i></span>
-        <span class="lux-menu-tx">Logout</span>
+        <span class="lux-menu-tx">Get the App</span>
       </button>
     </div>
 
@@ -104,7 +91,7 @@
           <div class="d-flex align-items-start justify-content-between gap-3">
             <div>
 	              <div class="lux-balance">
-	                <span id="demoBalance">0.00</span>
+	                <span id="demoBalance">12,480.00</span>
 	                <span class="lux-balance-unit">USDT</span>
 	              </div>
 </div>
@@ -116,19 +103,19 @@
           <div class="lux-mini-grid">
             <div class="lux-mini">
               <div class="lux-mini-label">Today's Activity</div>
-              <div class="lux-mini-value" id="todayIncome">$0.00</div>
+              <div class="lux-mini-value" id="todayIncome">$128.50</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Total Activity</div>
-              <div class="lux-mini-value" id="totalIncome">$0.00</div>
+              <div class="lux-mini-value" id="totalIncome">$9,340.10</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Network Activity</div>
-              <div class="lux-mini-value" id="teamIncome">$0.00</div>
+              <div class="lux-mini-value" id="teamIncome">$412.00</div>
             </div>
             <div class="lux-mini">
               <div class="lux-mini-label">Total Network Activity</div>
-              <div class="lux-mini-value" id="teamTotalIncome">$0.00</div>
+              <div class="lux-mini-value" id="teamTotalIncome">$21,880.75</div>
             </div>
           </div>
         </div>
@@ -170,14 +157,14 @@
               <span class="lux-quick-label">Transfer</span>
             </button>
 
-            <button class="lux-quick" id="quickNetworkBtn" type="button" aria-label="My team">
+            <button class="lux-quick" id="quickNetworkBtn" type="button" aria-label="Network">
               <span class="lux-quick-ico"><i class="fa-solid fa-users"></i></span>
-              <span class="lux-quick-label">My team</span>
+              <span class="lux-quick-label">Network</span>
             </button>
 
-            <button class="lux-quick" id="Records" type="button">
+            <button class="lux-quick" id="analyticsBtn" type="button">
               <span class="lux-quick-ico"><i class="fa-solid fa-chart-column"></i></span>
-              <span class="lux-quick-label">Records</span>
+              <span class="lux-quick-label">Analytics</span>
             </button>
             </div>
 
@@ -288,11 +275,32 @@
 
   <script type="module" src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"></script>
   <script nomodule src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+  <script src="./app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-config.js"></script>
 <script src="./supabase-client.js"></script>
 <script src="./session.js"></script>
-  <script src="./app.js"></script>
-<!-- Removed old data loader script -->
+<script src="./myassets.api.js"></script>
+<script>
+(() => {
+  const ids = ['rateBNB', 'rateTRX', 'rateETH'];
+
+  function stripUSDT(el) {
+    const t = (el.textContent || '').replace(/\s*USDT\s*/ig, '').trim();
+    if (t !== el.textContent) el.textContent = t;
+  }
+
+  function attach(el) {
+    stripUSDT(el);
+    const obs = new MutationObserver(() => stripUSDT(el));
+    obs.observe(el, { childList: true, characterData: true, subtree: true });
+  }
+
+  ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) attach(el);
+  });
+})();
+</script>
 </body>
 </html>
