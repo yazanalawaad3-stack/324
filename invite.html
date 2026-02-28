@@ -39,15 +39,31 @@
     .lux-main{
       padding-top:8px !important;
     }
-  </style>
+  
+
+    /* Unified back button (matches reference page) */
+    a.lux-back.lux-back--unified{
+      position: absolute;
+      left: 14px;
+      top: calc(var(--lux-safe-top) + 8px);
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f6c453;
+      font-size: 20px;
+      text-decoration: none;
+      padding: 0 6px;
+    }
+
+</style>
 </head>
 <body class="lux-body lux-solid-bg lux-invite-page">
   <div class="lux-app lux-page lux-app--page">
 
     <header class="lux-head lux-head-tight" aria-label="Invite friends header">
-      <a class="lux-back" href="./myassets.html" aria-label="Back">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-      </a>
+      <a class="lux-back lux-back--unified" href="./myassets.html" aria-label="Back">
+        ←</a>
 
       <div class="lux-head-title">
         <div class="lux-h1">Invite Friends</div>
